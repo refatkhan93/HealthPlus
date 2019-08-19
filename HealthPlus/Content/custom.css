@@ -1,0 +1,168 @@
+﻿body {
+}
+.mtitle {
+    position: absolute;
+    width: 90%;
+    margin-top: -92px;
+    padding: 10px;
+    
+    opacity: .8;
+    background-color: #7bbbbd85;
+}
+.mimg {
+        height: 17em;
+    width: 32em;
+    border: 1px solid aliceblue;
+    box-shadow: 1px 1px 1px aliceblue;
+}
+.mimg:hover {
+    box-shadow: 5px 5px 9px #9eecc2;
+}
+.mtext {
+    border-left: 4px solid blue;
+}
+.mtext2 {
+    border-right: 4px solid blue;
+}
+.insidetext {
+        font-weight: bold;
+    font-style: italic;
+    border-bottom: 1px solid royalblue;
+}
+.sidebar {
+    height: 49%;
+}
+.sideimg {
+    width: 13em;
+    border: 1px solid aliceblue;
+    box-shadow: 2px 3px 4px #6e6e7b;
+}
+
+.centertext {
+    text-align: center;
+    margin-top: 20px;
+    padding: 5px;
+}
+.subtitle {
+    text-align: center;
+    padding: 10px;
+}
+@media (max-width: 576px) {
+    .gone {
+        display: none;
+    }
+}
+.myclass {
+    margin-left: 0px;
+        font-size: 30px;
+}
+@media (min-width: 576px) {
+    .myclass {
+        margin-left: 76px;
+            font-size: 31px;
+    }                                
+}
+.logo {
+    margin-left: 15px;
+    font-size: 47px;
+}
+.menual {
+    margin-right: 30px;
+    font-size: 20px;
+}
+.slider {
+            height: 29em;
+            width: 100%;
+        }
+        .caption {
+            display: block;
+            position: absolute;
+            width: 100%;
+            right: 48%;
+            bottom: 58%;
+            left: 0%;
+            z-index: 10;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .blur {
+            height: 140px;
+            width: 100%;
+            margin-top: -7em;
+            margin-bottom: -50px;
+            background-color: #7bbbbd85;
+            background-position-y: 427px;
+            filter: blur(3px);
+        }
+        .text {
+            width: 42%;
+            margin-top: -90px;
+            margin-left: 15%;
+            margin-bottom: 0;
+            position: absolute;
+            z-index: 10;
+            text-align: left;
+        }
+        @media (max-width: 576px) {
+    .text {
+        width: 70%;
+            margin-top: -106px;
+            margin-left: 4%;
+           
+            position: absolute;
+            z-index: 10;
+            text-align: left;
+        }                             
+}
+        /*body container div with two rows and 3 columns*/
+        .blurredBG {
+      width: 102%;
+    height: 273px;
+    display: inline-block;
+    background-size: cover;
+    border-radius: 4px;
+    border: 2px solid #166d58;
+    box-shadow: 1px 1px 3px #9c9292;
+    position: relative;
+    overflow: hidden;
+    color: #000;
+    margin-bottom: 19px;
+}
+
+.blurredBG .parentBG {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  box-shadow: 0 0 8px #9c9292;
+  z-index: 1;
+  overflow: hidden;
+  transform: translateY(100%);
+  transition: 0.5s;
+  opacity: 0;
+}
+
+.blurredBG:hover .parentBG {
+  transform: translate(0);
+  opacity:1;
+}
+
+.blurredBG .content {
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 8px;
+  font-family: arial;
+}
+
+.blurredBG .bG {
+      position: absolute;
+    width: 100%;
+    height: 88px;
+    bottom: 0;
+    background-size: cover;
+    z-index: -1;
+    filter: blur(3px);
+    opacity: 1;
+    background-position-y: -182px;
+}

@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/x-icon" href="~/Photos/favicon.ico" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title> HealtPlus+</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+  
+    <style>
+
+        </style>
+
+</head>
+<body>
+<div style="background-color: #d6dee4; margin-right: 0px;" class="row gone">
+    <div class="col-md-1"></div>
+    <div class="col-md-3" style="margin-right: -104px;">
+        <i class=" fa fa-address-book">
+        </i>
+        <b>Emergency: </b>01755001451
+    </div>
+    <div class="col-md-2">
+        <span class="fa fa-envelope"></span>
+        refatkhan93@gmail.com
+    </div>
+    <div class="col-md-4"></div>
+    
+    <div class="col-md-2">
+            <span class="fa fa-map-marker"></span>
+            BGCMed,Chittagong
+    </div>
+</div>
+<nav style="background-color: #34404c;" class="navbar navbar-expand-lg navbar-dark">
+    <a class="navbar-brand myclass animated jello" href="#">
+        <i style="font-size: 47px;"class="logo fa fa-stethoscope"></i>
+        Healt Plus
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="menual collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="#">Appointment</a>
+            <a class="nav-item nav-link" href="#">Profile</a>
+            <a class="nav-item nav-link" href="#">Contact</a>
+            <a class="nav-item nav-link" href="#">Register</a>
+            <a class="nav-item nav-link" href="#">Login</a>
+            <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </div>
+
+    </div>
+</nav>
+
+<div class="body-content">
+    @RenderBody()
+    <hr/>
+    @*<footer>
+        <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+    </footer>*@
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
+</body>
+</html>
