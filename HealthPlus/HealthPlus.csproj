@@ -162,6 +162,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Doctor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -408,10 +409,17 @@
     <Content Include="Photos\blood.jpg" />
     <Content Include="Photos\consultant.jpg" />
     <Content Include="Photos\doctor2.jpg" />
+    <Content Include="Photos\Doctor\d1.jpg" />
+    <Content Include="Photos\Doctor\d2.jpg" />
+    <Content Include="Photos\Doctor\d3.jpg" />
+    <Content Include="Photos\Doctor\d4.jpg" />
+    <Content Include="Photos\Doctor\d5.jpg" />
+    <Content Include="Photos\Doctor\d6.jpg" />
     <Content Include="Photos\events.jpg" />
     <Content Include="Photos\guide.jpg" />
     <Content Include="Photos\reception.jpg" />
     <Content Include="Photos\tests.jpg" />
+    <Content Include="Photos\treatment.jpg" />
     <Content Include="Photos\ward.jpg" />
     <Content Include="Scripts\aos.js" />
     <Content Include="Scripts\bootstrap-clockpicker.min.js" />
@@ -541,7 +549,6 @@
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.woff" />
-    <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\FontAwesome.otf" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\index.d.ts" />
@@ -675,6 +682,7 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper.min.js.map" />
     <Content Include="Scripts\README.md" />
+    <Content Include="Views\Primary\Appointment.cshtml" />
     <None Include="Views\Primary\Index.cshtml" />
     <Content Include="webfonts\fa-brands-400.svg" />
     <Content Include="webfonts\fa-regular-400.svg" />
@@ -695,7 +703,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\CustomDesign\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

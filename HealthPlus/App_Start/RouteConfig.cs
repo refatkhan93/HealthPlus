@@ -16,7 +16,7 @@ namespace HealthPlus
             routes.MapRoute(
                 name: "Default",
                 url: "{action}/{id}",
-                defaults: new { controller = "Primary", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Primary", action = "Appointment", id = UrlParameter.Optional }
             );
         }
     }
