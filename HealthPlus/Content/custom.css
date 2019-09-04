@@ -387,3 +387,17 @@
           margin-left: -25px;
    }
 /*Appointment page */
+
+/*Doctor Page*/
+
+.dTitle {
+    text-align: center;
+    padding: 12px;
+    background-color: #98dca5;
+    margin-bottom: 26px;
+    font-size: 30px;
+    border-style: groove;
+    border-radius: 20px;
+}
+
+/*Doctor Page*/

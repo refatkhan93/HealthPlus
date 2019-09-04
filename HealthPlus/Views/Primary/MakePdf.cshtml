@@ -1,0 +1,122 @@
+﻿@using System.Security.AccessControl
+@using HealthPlus.Models
+@model HealthPlus.Models.Prescription
+@{
+    
+    Layout = null;
+    ViewBag.Title = "MakePdf";
+}
+
+<link href="~/Content/font-awesome.css" rel="stylesheet"/>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<style>
+    .title {
+        text-align: center;
+        font-size: 2em;
+
+    }
+    .sub {
+        text-align: center;
+        margin-top: -18px;
+        margin-bottom: 5px;
+    }
+    .ttbl {
+        display: inline;
+        margin-left: 4em;
+        
+        width: 18em;
+    }
+    .bdr {
+        border-right: 2px solid black;  
+     }
+    .pd {
+        padding: 10px;
+        min-height: 20em;
+        width: 16em;
+    }
+</style>
+<div style="border-bottom: 2px solid black;">
+    <p class="title"><i style="font-size: 47px;" class="logo fa fa-stethoscope"></i>Health Plus
+    </p>
+    <p class="sub">Contact No: +96969696 <br/>Address: Agrabad, Chittagong
+    </p>
+</div>
+<div class="row" style="margin-right: 0;">
+    <div class="col-md-6" style="
+    margin-top: 12px;
+">
+        <table class="ttbl">
+            <tbody style="text-align: left;">
+                <tr>
+                    <th>Patient's Name</th>
+                    <td>: abcd</td>
+                </tr>
+                <tr>
+                    <th>Age</th>
+                    <td>: 42</td>
+                </tr>
+               
+                <tr>
+                    <th>Phone No</th>
+                    <td>: 01458487845</td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="ttbl">
+            <tbody style="text-align: left;">
+                <tr>
+                    <th>Doctor's Name</th>
+                    <td>: abcd</td>
+                </tr>
+                <tr>
+                    <th>Designation</th>
+                    <td>: 42</td>
+                </tr>
+                <tr>
+                    <th>Phone No</th>
+                    <td>: 01458487845</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+<div class="container">
+
+    <table style="margin-top: 20px;">
+        <tr style="background-color: gainsboro;">
+            <td class="bdr" style="text-align: center;">Tests</td>
+            <td style="text-align: center; min-width: 34em;">
+                Medicine
+            </td>
+        </tr>
+        <tr>
+            <td class="bdr">
+                <div class="pd">
+                    @{
+                        string k=Model.Tests;
+                        int len = k.Length;
+
+                        @Html.Raw(@k)
+                    }
+                   
+                </div>
+                
+            </td>
+            <td>
+                <div class="pd">
+                    @Html.Raw(@Model.Prescript)
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="row" style="margin-top: 8px;">
+
+        <p>..................................... <br/> Date: @DateTime.Now.ToString("dd/MM/yyyy")</p>
+    </div>
+
+</div>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
