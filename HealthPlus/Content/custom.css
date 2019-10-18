@@ -363,6 +363,8 @@
     box-shadow: 3px 4px 11px #b2bfbf;
    }
    .doctext {
+       height: 123px;
+       font-size: 14px;
        margin-left: 16px;
            text-decoration: none;
     color: black;

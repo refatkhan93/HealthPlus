@@ -1,4 +1,7 @@
-﻿@{
+﻿@using HealthPlus.Models
+@model List<Service>
+
+@{
     
 }
 
@@ -10,7 +13,9 @@
     <style>
 
         </style>
-    <link rel="stylesheet" href="animate.min.css">
+    <link href="~/Content/animate.min.css" rel="stylesheet" />
+    
+<link href="~/Content/animate.min.css" rel="stylesheet" />
     <link href="~/Content/aos.css" rel="stylesheet"/>
 </head>
 <body>
@@ -72,119 +77,58 @@
         <div class="row">
             <div class="col-md-12">
                 <h2 class="centertext">Our Services</h2>
-                <p class="subtitle">There are our services in short. Select one you need. After clicking on those option you will be
-                    forwarded to a page as in need. Even if you need direct contact with our hospital feel free to contact consltant on right side.</p>
+                <p class="subtitle">
+                    There are our services in short. Select one you need. After clicking on those option you will be
+                    forwarded to a page as in need. Even if you need direct contact with our hospital feel free to contact consltant on right side.
+                </p>
             </div>
 
         </div>
         <div class="col-md-10">
-            <div class="row" data-aos="zoom-out-right" data-aos-duration="1000">
-                <div class="col-md-4">
-                    <a href="#" style="background-image: url(/Photos/doctor2.jpg);" class="blurredBG">
-                        <div class="parentBG">
+            <div class="row" data-aos="zoom-in-up" data-aos-duration="1000" data-aos-once="false">
+                @{
+                    foreach (Service service in Model)
+                    {
 
-                            <div class="content">
-                                <h5 class="insidetext">Doctor</h5>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a tempor quam, eu efficitur tortor.
-                            </div>
-                            <div class="bG" style="background-image: url(/Photos/doctor2.jpg);">
-                                <!--same background-->
+                        <div class="col-md-4">
+                            <a href="@service.TargetLink" style="background-image: url(@service.Image);" class="blurredBG">
+                                <div class="parentBG">
 
-                            </div>
+                                    <div class="content">
+                                        <h5 class="insidetext">@service.Title</h5>
+                                        @service.Description
+                                    </div>
+                                    <div class="bG" style="background-image: url(@service.Image);">
+                                        <!--same background-->
+
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a href="#" style="background-image: url(/Photos/blood.jpg);" class="blurredBG">
-                        <div class="parentBG">
-                            <div class="content">
-                                <h5 class="insidetext">Blood</h5>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a tempor quam, eu efficitur tortor.
-                            </div>
-                            <div class="bG" style="background-image: url(/Photos/blood.jpg);">
-                                <!--same background-->
 
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a href="#" style="background-image: url(/Photos/ambulance.jpg);" class="blurredBG">
-                        <div class="parentBG">
-                            <div class="content">
-                                <h5 class="insidetext">Ambulance</h5>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a tempor quam, eu efficitur tortor.
-                            </div>
-                            <div class="bG" style="background-image: url(/Photos/ambulance.jpg);">
-                                <!--same background-->
-
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                    }
+                }
             </div>
-            <div class="row" data-aos="zoom-out-left" data-aos-duration="1000" data-aos-once="false">
-                <div class="col-md-4">
-                    <a href="#" style="background-image: url(/Photos/events.jpg);" class="blurredBG">
-                        <div class="parentBG">
-                            <div class="content">
-                                <h5 class="insidetext">Events</h5>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a tempor quam, eu efficitur tortor.
-                            </div>
-                            <div class="bG" style="background-image: url(/Photos/events.jpg);">
-                                <!--same background-->
 
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a href="#" style="background-image: url(/Photos/guide.jpg);" class="blurredBG">
-                        <div class="parentBG">
-                            <div class="content">
-                                <h5 class="insidetext">User Guide</h5>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a tempor quam, eu efficitur tortor.
-                            </div>
-                            <div class="bG" style="background-image: url(/Photos/guide.jpg);">
-                                <!--same background-->
-
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a href="#" style="background-image: url(https://web.opendrive.com/api/v1/download/file.json/NTlfODQ2MzgzOV8?inline=1)" class="blurredBG">
-                        <div class="parentBG">
-                            <div class="content">
-                                <h5 class="insidetext">Doctor</h5>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a tempor quam, eu efficitur tortor.
-                            </div>
-                            <div class="bG" style="background-image: url(https://web.opendrive.com/api/v1/download/file.json/NTlfODQ2MzgzOV8?inline=1)">
-                                <!--same background-->
-
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
         </div>
+
         <div class="col-md-2">
 
             <div class="sidebar" data-aos="fade-left" data-aos-duration="1000" data-aos-once="true">
                 <h2>Reception</h2>
-                <img class="sideimg" src="~/Photos/reception.jpg"/>
+                <img class="sideimg" src="~/Photos/reception.jpg" />
                 <p style="width: 223px; margin-top: 7px;">
-                    <b>Contact:</b><br/>
-                    <i class="fa fa-phone"></i> +880145245844<br/>
+                    <b>Contact:</b><br />
+                    <i class="fa fa-phone"></i> +880145245844<br />
                     <i class="fa fa-envelope"></i> medcare@med.com
                 </p>
             </div>
             <div class="sidebar" data-aos="fade-left" data-aos-duration="1000" data-aos-once="true">
                 <h2>Emergency</h2>
-                <img class="sideimg" src="~/Photos/consultant.jpg"/>
+                <img class="sideimg" src="~/Photos/consultant.jpg" />
                 <p style="width: 223px; margin-top: 7px;">
-                    <b>Contact:</b><br/>
-                    <i class="fa fa-phone"></i> +880145245844<br/>
+                    <b>Contact:</b><br />
+                    <i class="fa fa-phone"></i> +880145245844<br />
                     <i class="fa fa-envelope"></i> medcare@med.com
                 </p>
             </div>

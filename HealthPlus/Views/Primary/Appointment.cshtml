@@ -1,12 +1,42 @@
-﻿
+﻿@using HealthPlus.Models
+
 @{
     ViewBag.Title = "Appointment";
+    string isLogin;
+    if (Session["PatientId"] == null)
+    {
+        isLogin = "-1";
+    }
+    else
+    {
+        isLogin = "1";
+    }
+  
 }
+<link href="~/Content/bootstrap-datepicker.min.css" rel="stylesheet" />
 <style>
     .container {
         padding: 35px;
         background-color: #f0ffffa3;
     } 
+    .ft-sz {
+        font-size: 17px;
+    }
+    .ft-ss {
+        font-size: 13px;
+    }
+
+    .warning {
+        background-color: #008814;
+        color: black;
+        font-weight: 400;
+        padding: 10px;
+        border-radius: 9px;
+        width: 28em;
+        text-align: center;
+        box-shadow: -1px 4px 1px 1px #bcc4cc;
+        margin-bottom: 37px;
+    }
 </style>
 <div class="">
     <div class="himg">
@@ -26,6 +56,12 @@
     <div class="row" style="padding: 30px;">
         <div class="col-md-4"></div>
         <div class="col-md-8">
+            @if (ViewBag.Message != null)
+            {
+                <div class="warning" id="warningLabel">
+                    <label>Your Appointment Placed Successfully, You will be notified soon.</label>
+                </div>
+            }
             <form>
                 <table>
                     <tr>
@@ -37,11 +73,11 @@
                         <td>
                             <select id="docCategory" class="form-control">
                                 <option value="">Select a category</option>
-                                <option value="1">ENT</option>
-                                <option value="2">ENT</option>
-                                <option value="3">ENT</option>
-                                <option value="4">ENT</option>
-                                <option value="5">ENT</option>
+                                @foreach (DoctorCategory dc in ViewBag.Category)
+                                {
+                                    <option value="@dc.Id">@dc.Title</option>
+                                }
+
                             </select>
                         </td>
                     </tr>
@@ -52,207 +88,126 @@
         </div>
     </div>
 <div class="row docrow" id="drow">
-    <div class="col-md-3" style="margin-bottom: 36px;">
-        <a class="link" href="">
-            <div>
-                <img class="docimg" src="~/Photos/treatment.jpg"/>
+    @foreach (Doctor doctor in ViewBag.Doctor)
+    {
+        <div class="col-md-3" style="margin-bottom: 36px;">
+            @if (Session["PatientId"] == null)
+            {
+                 <div>
+                    <img class="docimg" src="~/@doctor.Image"/>
+                </div>
+                <div style="visibility: hidden; height: 0;" id="Did">@doctor.Id</div>
+                <div style="visibility: hidden; height: 0;" id="Dsc">@doctor.Schedule</div>
+                    <div class="doctext">
+                        <table>
+                            <tr>
+                                <th class="ft-sz">@doctor.Name</th>
+                            </tr>
+                            <tr class="ft-ss">
+                                <td>@doctor.Designation</td>
+                                
+                            </tr>
+                            <tr>
+                                <td>@doctor.Degree</td>
+                            </tr>
+                            <tr>
+                                <td>fees: @doctor.Fees </td>
+                            </tr>
+                        </table>
+                        
+                    </div>
+            }
+            else
+            {
+                <a class="link" href="">
+                <div>
+                    <img class="docimg" src="~/@doctor.Image"/>
 
-            </div>
-            <div style="visibility: hidden; height: 0;" id="Did">10</div>
-            <div class="doctext">
-                <h2>Dr. Ajay kanti </h2>
-                <h6>Child specialist</h6>
-                MBBS,FPS
-            </div>
-            <div class="mblur">
-                
-            </div>
-        </a>
-    </div>
-    <div class="col-md-3" style="margin-bottom: 36px;">
-        <a class="link" href="#">
-            <div>
-                <img class="docimg" src="~/Photos/treatment.jpg"/>
-            </div>
-            <div class="doctext">
-                <h2>Dr. Ajay kanti </h2>
-                <h6>Child specialist</h6>
-                MBBS,FPS
-            </div>
-            <div class="mblur">
+                </div>
+                    <div style="visibility: hidden; height: 0;" id="Did">@doctor.Id</div>
+                    <div style="visibility: hidden; height: 0;" id="Dsc">@doctor.Schedule</div>
+                    <div class="doctext">
+                        <table>
+                            <tr>
+                                <th class="ft-sz">@doctor.Name</th>
+                            </tr>
+                            <tr class="ft-ss">
+                                <td>@doctor.Designation</td>
+                                
+                            </tr>
+                            <tr>
+                                <td>@doctor.Degree</td>
+                            </tr>
+                            <tr>
+                                <td>fees: @doctor.Fees </td>
+                            </tr>
+                        </table>
+                        
+                    </div>
+            </a>
+            }
+           @* <a class="link" href="">
+                <div>
+                    <img class="docimg" src="~/@doctor.Image"/>
 
-            </div>
-        </a>
-    </div>
-    <div class="col-md-3" style="margin-bottom: 36px;">
-        <a class="link" href="#">
-            <div>
-                <img class="docimg" src="~/Photos/treatment.jpg"/>
-            </div>
-            <div class="doctext">
-                <h2>Dr. Ajay kanti </h2>
-                <h6>Child specialist</h6>
-                MBBS,FPS
-            </div>
-            <div class="mblur">
-
-            </div>
-        </a>
-    </div>
-    <div class="col-md-3" style="margin-bottom: 36px;">
-        <a class="link" href="#">
-            <div>
-                <img class="docimg" src="~/Photos/treatment.jpg"/>
-            </div>
-            <div class="doctext">
-                <h2>Dr. Ajay kanti </h2>
-                <h6>Child specialist</h6>
-                MBBS,FPS
-            </div>
-            <div class="mblur">
-
-            </div>
-        </a>
-    </div>
-
-    <div class="col-md-3" style="margin-bottom: 36px;">
-        <a class="link" href="#">
-            <div>
-                <img class="docimg" src="~/Photos/treatment.jpg"/>
-            </div>
-            <div class="doctext">
-                <h2>Dr. Ajay kanti </h2>
-                <h6>Child specialist</h6>
-                MBBS,FPS
-            </div>
-            <div class="mblur">
-
-            </div>
-        </a>
-    </div>
-    <div class="col-md-3" style="margin-bottom: 36px;">
-        <a class="link" href="#">
-            <div>
-                <img class="docimg" src="~/Photos/treatment.jpg"/>
-            </div>
-            <div class="doctext">
-                <h2>Dr. Ajay kanti </h2>
-                <h6>Child specialist</h6>
-                MBBS,FPS
-            </div>
-            <div class="mblur">
-
-            </div>
-        </a>
-    </div>
-    <div class="col-md-3" style="margin-bottom: 36px;">
-        <a class="link" href="#">
-            <div>
-                <img class="docimg" src="~/Photos/treatment.jpg"/>
-            </div>
-            <div class="doctext">
-                <h2>Dr. Ajay kanti </h2>
-                <h6>Child specialist</h6>
-                MBBS,FPS
-            </div>
-            <div class="mblur">
-
-            </div>
-        </a>
-    </div>
-    <div class="col-md-3" style="margin-bottom: 36px;">
-        <a class="link" href="#">
-            <div>
-                <img class="docimg" src="~/Photos/Doctor/d1.jpg"/>
-            </div>
-            <div class="doctext">
-                <h2>Dr. Ajay kanti </h2>
-                <h6>Child specialist</h6>
-                MBBS,FPS
-            </div>
-            <div class="mblur">
-            </div>
-        </a>
-    </div>
+                </div>
+                <div style="visibility: hidden; height: 0;" id="Did">@doctor.Id</div>
+                <div class="doctext">
+                    <h2 class="ft-sz">@doctor.Name</h2>
+                    <h6 class="ft-ss">@doctor.Designation</h6>
+                    @doctor.Degree
+                </div>
+            </a>*@
+        </div>
+    }
 </div>
 <div class="row" id="dform">
     <div class="col-md-3" id="next">
         
     </div>
     <div class="col-md-9">
-        <form>
+        <form method="POST" action="TakeAppointment">
             <div id="Dform">
                 
             </div>
             <div class="form-group row">
-                <label for="name" class="col-sm-2 col-form-label">Patient's Name</label>
-                <div class="col-sm-10">
-                    <input type="email" class="form-control" id="name" placeholder="Patient's Name">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="age" class="col-sm-2 col-form-label">Age</label>
-                <div class="col-sm-10">
-                    <input type="number" class="form-control" id="age" placeholder="Age">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="address" class="col-sm-2 col-form-label">Address</label>
-                <div class="col-sm-10">
-                    <textarea class="form-control" id="address" placeholder="Address"></textarea>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="phone" class="col-sm-2 col-form-label">Phone No</label>
-                <div class="col-sm-10">
-                    <input type="number" class="form-control" id="phhone" placeholder="Phone no">
-                </div>
-            </div>
-            <fieldset class="form-group">
-                <div class="row">
-                    <legend class="col-form-label col-sm-2 pt-0">Sex</legend>
-                    <div class="col-sm-10">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-                            <label class="form-check-label" for="gridRadios1">
-                                Male
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-                            <label class="form-check-label" for="gridRadios2">
-                                Female
-                            </label>
-                        </div>
-                        <div class="form-check disabled">
-                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3">
-                            <label class="form-check-label" for="gridRadios3">
-                                Others
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
-            <div class="form-group row">
-                <div class="col-sm-2">Checkbox</div>
-                <div class="col-sm-10">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="gridCheck1">
-                        <label class="form-check-label" for="gridCheck1">
-                            Example checkbox
-                        </label>
+                <label for="name" class="col-sm-2 col-form-label">Select Date</label>
+                <div class="col-sm-6">
+                    <div class="input-group date">
+                        <input id="datetime" type="text" name="Date" class="form-control">
+                        <span class="input-group-addon" style="background-color: gainsboro;">
+                        <i class="fa fa-calendar" style="padding: 10px;"></i></span>
                     </div>
                 </div>
             </div>
             <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Select Session</label>
+                <div class="col-sm-6">
+                    <select id="docCategory"  name="Session" class="form-control">
+                        <option value="">Select Session</option>
+                        <option value="1">Morning ( 08:00AM-01:00PM)</option>
+                        <option value="2">Afternoon ( 03:00PM-06:00PM)</option>
+                        <option value="3">Evening (7:00PM-10:00PM)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Select Session</label>
+                <div class="col-sm-6">
+                    <textarea name="Note" placeholder="Enter Your Note About Patient" style="width: 24em; height: 108px; margin-top: 0px; margin-bottom: 0px;"></textarea>
+                </div>
+            </div>
+            
+            <div class="form-group row">
                 <div class="col-sm-2"></div>
-                <div class="col-sm-10">
-                    <button style="width: 100%;" type="submit" class="btn btn-primary">Sign in</button>
+                <div class="col-sm-6">
+                    <button style="width: 100%;" type="submit" class="btn btn-primary">Request Appointment</button>
                 </div>
             </div>
             <div class="form-group row">
                 <div class="col-sm-2"></div>
-                <div class="col-sm-10">
+                <div class="col-sm-6">
                     <button id="back" style="width: 100%;" type="submit" class="btn btn-warning">Go Back</button>
                 </div>
             </div>
@@ -262,14 +217,51 @@
     
 </div>
 @section scripts{
+<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
     <script type="text/javascript">
         
         $(document).ready(function () {
+            setTimeout(function () {
+                $("#warningLabel").hide(1000).empty();
+            }, 5000);
+            function removeElement(array, elem) {
+                var index = array.indexOf(elem);
+                if (index > -1) {
+                    array.splice(index, 1);
+                }
+            }
+
+
+            var dateindex = [0,1,2,3,4,5,6];
+            var datelimit="\"";
+            
+
             $(document).on('click', '.link', function (e) {
+
                 $('#next').empty();
                 var k = $('#Did').text();
+                var kl = $('#Dsc').text();
+               var newdate = dateindex;
+                for (var i = 0; i < kl.length; i++) {
+                    if (kl[i] !== ',') {
+                        console.log(parseInt(kl[i]));
+                        removeElement(newdate, parseInt(kl[i]));
+                    }
+                }
+                for (var i = 0; i < newdate.length-1; i++) {
+                    datelimit = datelimit + newdate[i].toString()+",";
+                }
+                datelimit = datelimit + newdate[i].toString();
+                datelimit = datelimit + "\"";
+                console.log(datelimit);
+                $('#datetime').datepicker({
+                    todayBtn: "linked",
+                    daysOfWeekDisabled: datelimit,
+                    todayHighlight: true
+                });
                 $("#Dform").empty();
-                $('#Dform').append('<input type="hidden" name="id" value="' + k + '"/>');
+                $('#Dform').append('<input type="hidden" name="DoctorId" value="' + k + '"/>' +
+                     '<input type="hidden" name="sid" value="' + kl + '"/>');
                 $('#next').append($(this).html());
                 $('#dform').show();
                 $('#drow').hide();
@@ -284,10 +276,30 @@
 
             $('.link').on('click', function () {
                 var k = $('#Did').text();
+                var kl = $('#Dsc').text();
+                var newdate = dateindex;
+                for (var i = 0; i < kl.length; i++) {
+                    if (kl[i] !== ',') {
+                        console.log(parseInt(kl[i]));
+                        removeElement(newdate, parseInt(kl[i]));
+                    }
+                }
+                for (var i = 0; i < newdate.length-1; i++) {
+                    datelimit = datelimit + newdate[i].toString()+",";
+                }
+                datelimit = datelimit + newdate[i].toString() ;
+                datelimit=datelimit+"\"";
+                console.log(datelimit);
+                $('#datetime').datepicker({
+                    todayBtn: "linked",
+                    daysOfWeekDisabled: datelimit,
+                    todayHighlight: true
+                });
                // $("#add").val('');
                 $('#next').empty();
                 $("#Dform").empty();
-                $('#Dform').append('<input type="hidden" name="id" value="' + k + '"/>');
+                $('#Dform').append('<input type="hidden" name="DoctorId" value="' + k + '"/>' +
+                    '<input type="hidden" name="sid" value="' + kl + '"/>');
                
                 console.log(k);
                 $('#next').append($(this).html());
@@ -313,19 +325,35 @@
                     contentType: 'application/json',
                     data: JSON.stringify(json),
                     success: function (response) {
+                       
                         $.each(response, function (key, value) {
-                            //$('#tableBody').append('<tr><td>' + value.CourseCode + '</td><td>' + value.CourseName + '</td><td>' + value.CourseSemester + '</td><td>' + value.CourseTeacher + '</td></tr>');
-                            $('#drow').append(
+                            if ("@isLogin" === "-1") {
+                                $('#drow').append('<div class="col-md-3" style="margin-bottom: 36px;">' +
+                                    '<div><img class="docimg" src="'+value.Image+'"/>' +
+                                    '</div><div style="visibility: hidden; height: 0;" id="Did">'+value.Id+'</div><div style="visibility: hidden; height: 0;" id="Dsc">'+value.Schedule+'</div>'+
+                    '<div class="doctext"><table><tr><th class="ft-sz">'+value.Name+'</th></tr>'+
+                            '<tr class="ft-ss">'+
+                                '<td>'+value.Designation+'</td>'+
+                            '</tr><tr><td>'+value.Degree+'</td></tr><tr>'+
+                                '<td>fees:'+ value.Fees +'</td></tr> </table></div>');
+                            
+                            
+                            } 
+                            else {
+                                $('#drow').append(
                                 '<div class="col-md-3" style="margin-bottom: 36px;">' +
                                 '<a class="link" href="">'+
-                                '<div>' +
-                                ' <div style="visibility: hidden; height: 0;" id="Did">10</div>'+
-                                '<img class="docimg" src="/' +value.Photo+'"/>'+
-                                '</div>'+
-                                '<div class="doctext">'+
-                                '<h2>'+ value.Name +'</h2><h6>'+ value.Designation +'</h6>' + value.Degree +
-                                '</div>'+
-                                '<div class="mblur"></div> </a></div>');
+                                '<div><img class="docimg" src="'+value.Image+'"/>' +
+                                '</div><div style="visibility: hidden; height: 0;" id="Did">'+value.Id+'</div><div style="visibility: hidden; height: 0;" id="Dsc">'+value.Schedule+'</div>'+
+                '<div class="doctext"><table><tr><th class="ft-sz">'+value.Name+'</th></tr>'+
+                        '<tr class="ft-ss">'+
+                            '<td>'+value.Designation+'</td>'+
+                        '</tr><tr><td>'+value.Degree+'</td></tr><tr>'+
+                            '<td>fees: '+value.Fees+' </td></tr> </table></div>');
+                            
+                            
+                            }
+                            
                             
                         });
                     }

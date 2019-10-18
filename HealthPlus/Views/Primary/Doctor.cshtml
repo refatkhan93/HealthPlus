@@ -33,7 +33,8 @@
         <img style="width: 100%; height: 28em;" src="~/Photos/treatment.jpg"/>
     </div>
     <div class="htext">
-        <h2>Heal the patient</h2>
+        <h2>Welcome @Session["DoctorName"]  </h2>
+        
         You can manage patient, see their history and much more.
     </div>
     <div class="hblur">
@@ -70,11 +71,7 @@
                 <td id="serial">@i</td>
                 <td id="name">@patient.Name</td>
                 <td id="age">@patient.Age</td>
-                <td id="history">@patient.History</td>
-                <td id="report">@patient.Report
-
-                    
-                </td>
+               
 
                 <td><button id="@ca" style="width: 100%;" class="btn btn-success ttb">Call</button>
                     <div style="height: 0; width: 0; visibility: hidden;" id="PatientId">@patient.Id</div></td>
