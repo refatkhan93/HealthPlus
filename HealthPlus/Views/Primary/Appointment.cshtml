@@ -166,7 +166,7 @@
         
     </div>
     <div class="col-md-9">
-        <form method="POST" action="TakeAppointment">
+        <form method="POST" action="@Url.Action("TakeAppointment","Patient")">
             <div id="Dform">
                 
             </div>
@@ -174,7 +174,7 @@
                 <label for="name" class="col-sm-2 col-form-label">Select Date</label>
                 <div class="col-sm-6">
                     <div class="input-group date">
-                        <input id="datetime" type="text" name="Date" class="form-control">
+                        <input id="datetime" type="text" name="Date" class="form-control" autocomplete="off">
                         <span class="input-group-addon" style="background-color: gainsboro;">
                         <i class="fa fa-calendar" style="padding: 10px;"></i></span>
                     </div>
@@ -237,11 +237,10 @@
             
 
             $(document).on('click', '.link', function (e) {
-
                 $('#next').empty();
                 var k = $('#Did').text();
                 var kl = $('#Dsc').text();
-               var newdate = dateindex;
+                var newdate = dateindex;
                 for (var i = 0; i < kl.length; i++) {
                     if (kl[i] !== ',') {
                         console.log(parseInt(kl[i]));
@@ -253,8 +252,14 @@
                 }
                 datelimit = datelimit + newdate[i].toString();
                 datelimit = datelimit + "\"";
-                console.log(datelimit);
+                
+                var asiaTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" });
+                var date = new Date(asiaTime);
+                date.setDate(date.getDate());
+                $("#datetime").datepicker("destroy");
                 $('#datetime').datepicker({
+                    startDate: date,
+                    endDate: '+10d',
                     todayBtn: "linked",
                     daysOfWeekDisabled: datelimit,
                     todayHighlight: true
@@ -289,8 +294,13 @@
                 }
                 datelimit = datelimit + newdate[i].toString() ;
                 datelimit=datelimit+"\"";
-                console.log(datelimit);
+                var asiaTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" });
+                var date = new Date(asiaTime);
+                date.setDate(date.getDate());
+                $("#datetime").datepicker("destroy");
                 $('#datetime').datepicker({
+                    startDate: date,
+                    endDate: '+10d',
                     todayBtn: "linked",
                     daysOfWeekDisabled: datelimit,
                     todayHighlight: true
@@ -329,7 +339,7 @@
                         $.each(response, function (key, value) {
                             if ("@isLogin" === "-1") {
                                 $('#drow').append('<div class="col-md-3" style="margin-bottom: 36px;">' +
-                                    '<div><img class="docimg" src="'+value.Image+'"/>' +
+                                    '<div><img class="docimg" src="/'+value.Image+'"/>' +
                                     '</div><div style="visibility: hidden; height: 0;" id="Did">'+value.Id+'</div><div style="visibility: hidden; height: 0;" id="Dsc">'+value.Schedule+'</div>'+
                     '<div class="doctext"><table><tr><th class="ft-sz">'+value.Name+'</th></tr>'+
                             '<tr class="ft-ss">'+
@@ -343,7 +353,7 @@
                                 $('#drow').append(
                                 '<div class="col-md-3" style="margin-bottom: 36px;">' +
                                 '<a class="link" href="">'+
-                                '<div><img class="docimg" src="'+value.Image+'"/>' +
+                                '<div><img class="docimg" src="/'+value.Image+'"/>' +
                                 '</div><div style="visibility: hidden; height: 0;" id="Did">'+value.Id+'</div><div style="visibility: hidden; height: 0;" id="Dsc">'+value.Schedule+'</div>'+
                 '<div class="doctext"><table><tr><th class="ft-sz">'+value.Name+'</th></tr>'+
                         '<tr class="ft-ss">'+

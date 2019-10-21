@@ -43,26 +43,26 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="menual collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-        @if (Session["PatientId"] == null && Session["DoctorId"]==null)
+        @if (Session["PatientId"] == null && Session["DoctorId"]==null && Session["ReceptionistId"]==null)
         {
         <div class="navbar-nav">
-            <a class="nav-item nav-link @ViewBag.Index" href="Index">Home <span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link  @ViewBag.Appointment" href="Appointment">Doctor</a>
+            <a class="nav-item nav-link @ViewBag.Index" href="@Url.Action("Index","Primary")">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link  @ViewBag.Appointment" href="@Url.Action("Appointment", "Primary")">Doctor</a>
             <a class="nav-item nav-link @ViewBag.Emergency" href="#">Emergency</a>
             <a class="nav-item nav-link @ViewBag.Contact" href="#">Contact</a>
-            <a class="nav-item nav-link  @ViewBag.Login" href="Login">Login</a>
-            <a class="nav-item nav-link  @ViewBag.Register" href="Register">Register</a>
+            <a class="nav-item nav-link  @ViewBag.Login" href="@Url.Action("Login","Authentication")">Login</a>
+            <a class="nav-item nav-link  @ViewBag.Register" href="@Url.Action("Register","Authentication")">Register</a>
         </div>
         }
         @if (Session["PatientId"] != null)
         {
             <div class="navbar-nav">
-                <a class="nav-item nav-link @ViewBag.Index" href="Index">Home <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link  @ViewBag.Appointment" href="Appointment">Appointment</a>
+                <a class="nav-item nav-link @ViewBag.Index" href="@Url.Action("Index","Primary")">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link  @ViewBag.Appointment" href="@Url.Action("Appointment", "Primary")">Appointment</a>
                 <a class="nav-item nav-link @ViewBag.Emergency" href="#">Emergency</a>
                 <a class="nav-item nav-link @ViewBag.Contact" href="#">Contact</a>
-                <a class="nav-item nav-link  @ViewBag.PatientProfile" href="PatientProfile">Profile</a>
-                <a class="nav-item nav-link " href="PatientLogout">Logout</a>
+                <a class="nav-item nav-link  @ViewBag.PatientProfile" href="@Url.Action("Profile", "Patient")">Profile</a>
+                <a class="nav-item nav-link " href="@Url.Action("PatientLogout","Authentication")">Logout</a>
             </div>
         }
         @if (Session["DoctorId"] != null)
@@ -77,7 +77,19 @@
                 
             </div>
         }
-        
+        @if (Session["ReceptionistId"] != null)
+        {
+            <div class="navbar-nav">
+                <a class="nav-item nav-link @ViewBag.Index" href="@Url.Action("Index","Primary")">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link  @ViewBag.Doctor" href="@Url.Action("AppointmentSchedule", "Receptionist")">Appointment Schedule</a>
+                <a class="nav-item nav-link @ViewBag.Emergency" href="#">Today's Schedule</a>
+                <a class="nav-item nav-link  @ViewBag.Doctor" href="Primary/Doctor">Doctor</a>
+                <a class="nav-item nav-link @ViewBag.Contact" href="#">Contact</a>
+                <a class="nav-item nav-link  @ViewBag.DoctorProfile" href="DoctorProfile">Profile</a>
+                <a class="nav-item nav-link " href="@Url.Action("ReceptionistLogout","Authentication")">Logout</a>
+                
+            </div>
+        }
 
     </div>
 </nav>

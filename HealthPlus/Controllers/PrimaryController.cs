@@ -31,6 +31,9 @@ namespace HealthPlus.Controllers
 
         public ActionResult Appointment(int? val)
         {
+            if (Session["PatientId"] == null)
+                RedirectToAction("Login");
+
             ViewBag.Appointment = "active";
             List<DoctorCategory> doctorCategories;
             IQueryable<Doctor> doctors;
@@ -52,7 +55,7 @@ namespace HealthPlus.Controllers
             return View();
         }
 
-        public ActionResult TakeAppointment(Appointment appointment)
+       /* public ActionResult TakeAppointment(Appointment appointment)
         {
             appointment.PatientId = Convert.ToInt32(Session["PatientId"]);
             appointment.Approval = 0;
@@ -65,7 +68,7 @@ namespace HealthPlus.Controllers
             }
            
             return RedirectToAction("Appointment", "Primary", new { val = 1 });
-        }
+        }*/
         public ActionResult Doctor()
         {
             ViewBag.Doctor= "active";
@@ -125,12 +128,12 @@ namespace HealthPlus.Controllers
 
         }
 
-        public ActionResult Login()
+       /* public ActionResult Login()
         {
             return View();
-        }
+        }*/
         [HttpPost]
-        public ActionResult Login(Login login)
+        /*public ActionResult Login(Login login)
         {
             string pass = EncodePasswordMd5(login.Password);
             using (var ctx = new HospitalContext())
@@ -171,20 +174,38 @@ namespace HealthPlus.Controllers
                         ViewBag.Error = "Login Failed";
                     }
                 }
-                else
+                else if (login.UserType == 3)
                 {
 
                 }
+                else if (login.UserType == 4)
+                {
+                    var q = ctx.Receptionist.Where(c => c.Email == login.UserEmail && c.Password == pass).Select(c => new { c.Id, c.Name }).ToList();
+                    if (q.Any())
+                    {
+                        foreach (var k in q)
+                        {
+                            Session["ReceptionistId"] = k.Id;
+                            Session["ReceptionistName"] = k.Name;
+
+                        }
+                        return RedirectToAction("Index", "Primary");
+                    }
+                    else
+                    {
+                        ViewBag.Error = "Login Failed";
+                    }
+                }
             }
             return View();
-        }
+        }*/
 
-        public ActionResult Register()
+       /* public ActionResult Register()
         {
             ViewBag.Register = "active";
             return View();
-        }
-        [HttpPost]
+        }*/
+        /*[HttpPost]
         public ActionResult Register(Patient patient)
         {
             using (var ctx = new HospitalContext())
@@ -203,8 +224,8 @@ namespace HealthPlus.Controllers
             }
             ViewBag.Success = '1';
             return View();
-        }
-        public static string EncodePasswordMd5(string pass) //Encrypt using MD5    
+        }*/
+        /*public static string EncodePasswordMd5(string pass) //Encrypt using MD5    
         {
             Byte[] originalBytes;
             Byte[] encodedBytes;
@@ -215,19 +236,88 @@ namespace HealthPlus.Controllers
             encodedBytes = md5.ComputeHash(originalBytes);
             //Convert encoded bytes back to a 'readable' string    
             return BitConverter.ToString(encodedBytes);
-        }
+        }*/
 
-        public ActionResult PatientLogout()
+        /*public ActionResult PatientLogout()
         {
             Session["PatientId"]=null;
             Session["PatientName"]=null;
             return RedirectToAction("Index", "Primary");
-        }
+        }*/
         public ActionResult DoctorLogout()
         {
             Session["DoctorId"] = null;
             Session["DoctorName"] = null;
             return RedirectToAction("Index", "Primary");
         }
+
+       /* public ActionResult Profile(string message)
+        {
+            if (Session["PatientId"] == null)
+                RedirectToAction("Login");
+
+            ViewBag.Profile = "active";
+            ViewBag.UpdateMessage = message;
+            List<DoctorAppointmentView> ProfileList=new List<DoctorAppointmentView>();
+            Patient p=new Patient();
+            using (var ctx = new HospitalContext())
+            {
+                var data  = (from a in ctx.Appointment
+                    join d in ctx.Doctor on a.DoctorId equals d.Id
+                    where a.DoctorId == d.Id
+                    select new
+                    {
+                        aDate = a.Date,
+                        aApproval = a.Approval,
+                        aName = d.Name,
+                        aPrescription = a.Prescription,
+                        aDesignation = d.Designation
+                    });
+                foreach (var d in data)
+                {
+                    DoctorAppointmentView dc=new DoctorAppointmentView();
+                    dc.Name = d.aName;
+                    dc.Designation = d.aDesignation;
+                    dc.Approval = d.aApproval;
+                    dc.Date = d.aDate;
+                    dc.Prescription = d.aPrescription;
+                    ProfileList.Add(dc);
+                }
+                int id = Convert.ToInt32(Session["PatientId"]);
+                var k = ctx.Patient.Where(e => e.Id == id).Select(c=>new{c.Name,c.Age,c.Address,c.PhoneNo});
+                foreach (var i in k)
+                {
+                    p.Name = i.Name;
+                    p.Address = i.Address;
+                    p.Age = i.Age;
+                    p.PhoneNo = i.PhoneNo;
+                }
+                ViewBag.Patient = p;
+            }
+            
+            return View(ProfileList);
+        }
+
+        public ActionResult UpdateUser(Patient patient)
+        {
+            int id = Convert.ToInt32(Session["PatientId"]);
+            string password = EncodePasswordMd5(patient.Password);
+            using (var ctx = new HospitalContext())
+            {
+                Patient p = ctx.Patient.Single(c => c.Id == id);
+                if (p.Password == password)
+                {
+                    p.Name = patient.Name;
+                    p.Age = patient.Age;
+                    p.Address = patient.Address;
+                    p.PhoneNo = patient.PhoneNo;
+                    ctx.SaveChanges();
+                    return RedirectToAction("Profile", "Primary",new {message="Infomation Updated Successfully"});
+                }
+                
+                    return RedirectToAction("Profile", "Primary", new { message = "Update Failed" });
+                
+            }
+        }*/
 	}
 }

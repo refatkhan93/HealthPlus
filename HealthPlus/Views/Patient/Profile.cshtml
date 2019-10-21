@@ -1,0 +1,215 @@
+﻿@using HealthPlus.Models
+@{
+    ViewBag.Title = "Profile";
+    int i = 1;
+    Patient p = ViewBag.Patient;
+}
+<link href="~/Content/DataTables/css/dataTables.bootstrap.min.css" rel="stylesheet"/>
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet"/>
+<style>
+    .warning {
+        
+        /* color: red; */
+        font-weight: 400;
+        padding: 10px;
+        border-radius: 9px;
+        width: 28em;
+        text-align: center;
+        box-shadow: -1px 4px 1px 1px #34404c;
+        margin-bottom: 11px;
+    }
+     .error {
+         color: red;
+     }
+    .dtable {
+        margin: 75px;
+        padding: 24px;
+        border: 3px;
+        border-style: inset;
+        box-shadow: 0px 0px 31px #d8d4d4;
+        border-radius: 20px 20px 0 0;
+    }
+    .dform {
+        margin: 75px;
+        padding: 62px 118px;
+        background-color: #f5f9fd;
+        border: 3px;
+        border-style: outset;
+        box-shadow: 0px 0px 31px #d8d4d4;
+        border-radius: 0 0 20px 20px;
+    }
+    .pending {
+        background-color: #fbfb2e;
+        color: brown;
+    }
+    .reject {
+        background-color: #ff4949;
+        color: #080808;
+    }
+    .seen {
+        background-color: #7979f5;
+        color: blanchedalmond;
+    }
+    .accepted {
+        background-color: #43e643;
+        color: brown;
+    }
+</style>
+<div class="dtable">
+    <table id="dtBasicExample" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th class="th-sm">Serial No</th>
+            <th class="th-sm">Date</th>
+            <th class="th-sm"> Doctor Name </th>
+            <th class="th-sm"> Designation</th>
+            <th class="th-sm">Approval</th>
+            <th class="th-sm">Prescription</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        @foreach (DoctorAppointmentView d in Model)
+        {
+
+            <tr>
+                <td>@i</td>
+                <td>@d.Date</td>
+                <td>@d.Name</td>
+                <td>@d.Designation</td>
+
+                @if (d.Approval == 0)
+                {
+                    <td class="pending">Pending</td>
+                }
+                else if (d.Approval == 1)
+                {
+                    <td class="accepted">Approved</td>
+                }
+
+                else if (d.Approval == 2)
+                {
+                    <td class="reject">Rejected</td>
+                }
+
+                else if (d.Approval == 3)
+                {
+                    <td class="seen">Seen</td>
+                }
+
+                <td>@d.Prescription</td>
+            </tr>
+            i = i + 1;
+        }
+        </tbody>
+    </table>
+</div>
+<div class="dform">
+    <center>
+        @if (ViewBag.UpdateMessage != null)
+{
+    if (ViewBag.UpdateMessage == "Infomation Updated Successfully")
+    {
+        <div class="warning" style="background-color: #46e86d;" id="warningLabel" >
+            <label>@ViewBag.UpdateMessage</label>
+        </div>
+    }
+    else
+    {
+                <div class="warning" style="background-color: #e84646;" id="warningLabel">
+                 <label>@ViewBag.UpdateMessage</label>
+                </div>
+            }
+            
+        }
+       
+        <p style="font-size: 19px; font-weight: 700; font-family: cursive;">
+            You Can Change Your Profile Information From Here
+        </p>
+    </center>
+    <form id="userUpdate" method="POST" action="UpdateUser">
+        <div class="form-group">
+            <label for="Name">Name</label>
+            <input type="text" class="form-control" id="Name" name="Name" value="@p.Name">
+        </div>
+        <div class="form-group">
+            <label for="Age">Age</label>
+            <input type="number" class="form-control" id="Age" name="Age" value="@p.Age">
+        </div>
+        <div class="form-group">
+            <label for="Address">Address</label>
+            <input type="text" class="form-control" id="Address" name="Address" value="@p.Address">
+        </div>
+        <div class="form-group">
+            <label for="Phone">Phone No</label>
+            <input type="text" class="form-control" id="Phone" name="PhoneNo" value="@p.PhoneNo">
+        </div>
+        <div class="form-group">
+            <label for="ConfirmPassword">Confirm Password</label>
+            <input type="password" class="form-control" id="ConfirmPassword" name="Password" placeholder="Confirm Your Password">
+        </div>
+        <input type="submit" class="form-control btn btn-success" name="submit" value="Update Information">
+    </form>
+</div>
+@section scripts{
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+        $('#dtBasicExample').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+        setTimeout(function () {
+            $("#warningLabel").hide(1000).empty();
+        }, 5000);
+        $("#userUpdate").validate({
+            rules: {
+                Name: "required",
+                Email: {
+                    required: true,
+                    email: true
+                },
+                Password: {
+                    required: true,
+                    minlength: 5
+                },
+                
+                PhoneNo: {
+                    required: true,
+                    number: true
+                },
+                Age: {
+                    required: true,
+                    number: true
+                },
+                Address: "required"
+
+
+            },
+            messages: {
+                Name: "Please Enter Your Name",
+                Email: {
+                    required: "Please Enter Your Email id",
+                    email: "Email id not correct"
+                },
+                Password: {
+                    required: "Please Enter Your Password",
+                    minlength: "Minimum length is 5"
+                },
+               
+                PhoneNo: {
+                    required: "Please Enter Your Phone No",
+                    number: "Number should not contain cahracter"
+                },
+                Age: {
+                    required: "Please Enter your age",
+                    number: "Age should be number"
+                },
+                Address: "Please Enter your Address"
+
+            }
+        });
+        });
+
+
+    </script>
+}

@@ -170,17 +170,23 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Context\HospitalContext.cs" />
+    <Compile Include="Controllers\AuthenticationController.cs" />
+    <Compile Include="Controllers\PatientController.cs" />
     <Compile Include="Controllers\PrimaryController.cs" />
+    <Compile Include="Controllers\ReceptionistController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Appointment.cs" />
     <Compile Include="Models\Doctor.cs" />
+    <Compile Include="Models\DoctorAppointmentView.cs" />
     <Compile Include="Models\DoctorCategory.cs" />
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\Patient.cs" />
+    <Compile Include="Models\PatientAppointmentView.cs" />
     <Compile Include="Models\Prescription.cs" />
+    <Compile Include="Models\Receptionist.cs" />
     <Compile Include="Models\Service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -688,8 +694,10 @@
     <Content Include="Views\Primary\Doctor.cshtml" />
     <None Include="Views\Primary\Index.cshtml" />
     <Content Include="Views\Primary\MakePdf.cshtml" />
-    <Content Include="Views\Primary\Login.cshtml" />
-    <Content Include="Views\Primary\Register.cshtml" />
+    <Content Include="Views\Authentication\Login.cshtml" />
+    <Content Include="Views\Authentication\Register.cshtml" />
+    <Content Include="Views\Patient\Profile.cshtml" />
+    <Content Include="Views\Receptionist\AppointmentSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

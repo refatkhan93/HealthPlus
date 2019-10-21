@@ -14,6 +14,7 @@ namespace HealthPlus.Context
         public DbSet<DoctorCategory> DoctorCategory { get; set; }
         public DbSet<Patient> Patient { get; set; }
         public DbSet<Appointment> Appointment { get; set; }
+        public DbSet<Receptionist> Receptionist { get; set; }
 
 
     }
