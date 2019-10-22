@@ -1,0 +1,117 @@
+﻿
+@{
+    ViewBag.Title = "Report";
+}
+<div id="printableArea" style="width:400px; height:400px;">
+    cell: <canvas id="myChart"></canvas>
+</div>
+<button id="printChart" onclick="printDiv('myChart')">Print only the above div</button>
+
+@section scripts{
+    <script src="~/Scripts/Chart.min.js"></script>
+    <script>
+        var myChart;
+        $(document).ready(function() {
+
+
+            var ctx = document.getElementById('myChart');
+            var dt = [12, 19, 3, 5, 2, 3];
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    datasets: [
+                        {
+                            label: '# of Votes',
+                            data: dt,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }, {
+                            label: '# of Votes',
+                            data: [12, 19, 3, 5, 2, 3],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        yAxes: [
+                            {
+                                barPercentage: 0.5,
+                                barThickness: 6,
+                                maxBarThickness: 8,
+                                minBarLength: 2,
+                                gridLines: {
+                                    offsetGridLines: true
+                                },
+                                ticks: {
+                                    beginAtZero: true
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'probability'
+                                }
+                            }
+                        ],
+                        xAxes: [
+                            {
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'probability'
+                                }
+                            }
+                        ]
+                    },
+                    title: {
+                        display: true,
+                        text: 'Custom Chart Title'
+                    }
+                }
+            });
+        });
+        function printDiv(divName) {
+            
+            $(document).not("#myChart").hide();
+              /*  var printContents = myChart;
+                var originalContents = document.body.innerHTML;*/
+            window.print();
+               /* document.body.innerHTML = printContents;
+
+               
+
+                document.body.innerHTML = originalContents;*/
+            }
+      
+    </script>
+}

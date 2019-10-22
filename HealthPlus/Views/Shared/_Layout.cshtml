@@ -81,11 +81,10 @@
         {
             <div class="navbar-nav">
                 <a class="nav-item nav-link @ViewBag.Index" href="@Url.Action("Index","Primary")">Home <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link  @ViewBag.Doctor" href="@Url.Action("AppointmentSchedule", "Receptionist")">Appointment Schedule</a>
-                <a class="nav-item nav-link @ViewBag.Emergency" href="#">Today's Schedule</a>
-                <a class="nav-item nav-link  @ViewBag.Doctor" href="Primary/Doctor">Doctor</a>
+                <a class="nav-item nav-link  @ViewBag.AppointmentSchedule" href="@Url.Action("AppointmentSchedule", "Receptionist")">Appointment Schedule</a>
                 <a class="nav-item nav-link @ViewBag.Contact" href="#">Contact</a>
-                <a class="nav-item nav-link  @ViewBag.DoctorProfile" href="DoctorProfile">Profile</a>
+                <a class="nav-item nav-link  @ViewBag.Report" href="@Url.Action("Report", "Receptionist")">Report</a>
+                <a class="nav-item nav-link  @ViewBag.Report" href="@Url.Action("ReceptionistProfile", "Receptionist")">Profile</a>
                 <a class="nav-item nav-link " href="@Url.Action("ReceptionistLogout","Authentication")">Logout</a>
                 
             </div>

@@ -43,16 +43,16 @@
         color: brown;
     }
     .reject {
-        background-color: #ff4949;
-        color: #080808;
+        background-color: #dc3545;
+        color: white;
     }
     .seen {
         background-color: #7979f5;
         color: blanchedalmond;
     }
     .accepted {
-        background-color: #43e643;
-        color: brown;
+        background-color: #28a745;
+        color: white;
     }
 </style>
 <div class="dtable">
@@ -158,6 +158,7 @@
         $(document).ready(function () {
         $('#dtBasicExample').DataTable();
         $('.dataTables_length').addClass('bs-select');
+
         setTimeout(function () {
             $("#warningLabel").hide(1000).empty();
         }, 5000);

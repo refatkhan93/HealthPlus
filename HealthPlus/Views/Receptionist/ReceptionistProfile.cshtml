@@ -1,0 +1,115 @@
+﻿@using HealthPlus.Models
+
+@{
+    ViewBag.Title = "ReceptionistProfile";
+    Receptionist p = ViewBag.Receptionist;
+}
+<style>
+    .warning {
+        /* color: red; */
+        font-weight: 400;
+        padding: 10px;
+        border-radius: 9px;
+        width: 28em;
+        text-align: center;
+        box-shadow: -1px 4px 1px 1px #34404c;
+        margin-bottom: 11px;
+    }
+
+    .error {
+        color: red;
+    }
+     .dform {
+         margin: 75px;
+         padding: 62px 118px;
+         background-color: #f5f9fd;
+         border: 3px;
+         border-style: outset;
+         box-shadow: 0px 0px 31px #d8d4d4;
+         border-radius: 0 0 20px 20px;
+     }
+</style>
+<div class="dform">
+    <center>
+        @if (ViewBag.UpdateMessage != null)
+        {
+            if (ViewBag.UpdateMessage == "Infomation Updated Successfully")
+            {
+                <div class="warning" style="background-color: #46e86d;" id="warningLabel">
+                    <label>@ViewBag.UpdateMessage</label>
+                </div>
+            }
+            else
+            {
+                <div class="warning" style="background-color: #e84646;" id="warningLabel">
+                    <label>@ViewBag.UpdateMessage</label>
+                </div>
+            }
+
+        }
+
+        <p style="font-size: 19px; font-weight: 700; font-family: cursive;">
+            You Can Change Your Profile Information From Here
+        </p>
+    </center>
+    <form id="userUpdate" method="POST" action="@Url.Action("UpdateReceptionist","Receptionist")" enctype="multipart/form-data">
+        <div class="form-group">    
+                <img style="height: 12em; width: 18em;" src="~/@p.Image"/>
+            <input type="file" name="file"/>
+            <input type="hidden" name="photoName" value="@p.Image"/>
+        </div>
+        <div class="form-group">
+            <label for="Name">Name</label>
+            <input type="text" class="form-control" id="Name" name="Name" value="@p.Name">
+        </div>
+        <div class="form-group">
+            <label for="Phone">Phone No</label>
+            <input type="text" class="form-control" id="Phone" name="PhoneNo" value="@p.PhoneNo">
+        </div>
+        <div class="form-group">
+            <label for="ConfirmPassword">Confirm Password</label>
+            <input type="password" class="form-control" id="ConfirmPassword" name="Password" placeholder="Confirm Your Password">
+        </div>
+        <input type="submit" class="form-control btn btn-success" name="submit" value="Update Information">
+    </form>
+</div>
+@section scripts{
+<script src="~/Scripts/jquery.validate.min.js"></script>
+    <script>
+        setTimeout(function () {
+            $("#warningLabel").hide(1000).empty();
+        }, 5000);
+        $("#userUpdate").validate({
+            rules: {
+                Name: "required",
+              
+                Password: {
+                    required: true,
+                    minlength: 5
+                },
+
+                PhoneNo: {
+                    required: true,
+                    number: true
+                }
+               
+            },
+            messages: {
+                Name: "Please Enter Your Name",
+                
+                Password: {
+                    required: "Please Enter Your Password",
+                    minlength: "Minimum length is 5"
+                },
+
+                PhoneNo: {
+                    required: "Please Enter Your Phone No",
+                    number: "Number should not contain cahracter"
+                }
+               
+
+            }
+        });
+    </script>
+}
+

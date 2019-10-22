@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using HealthPlus.Context;
@@ -110,6 +113,92 @@ namespace HealthPlus.Controllers
                 ctx.SaveChanges();
             }
             return Json('1');
+        }
+
+        public ActionResult Report()
+        {
+            ViewBag.Report = "active";
+            return View();
+        }
+
+        public ActionResult ReceptionistProfile(string message)
+        {
+            ViewBag.UpdateMessage = message;
+            Receptionist r=new Receptionist();
+            int id = Convert.ToInt32(Session["ReceptionistId"]);
+            using (var ctx = new HospitalContext())
+            {
+                var k =
+                    ctx.Receptionist.Where(c => c.Id == id)
+                        .Select(c => new {c.Name, c.PhoneNo, c.Image})
+                        .FirstOrDefault();
+                
+                r.PhoneNo = k.PhoneNo;
+                r.Name = k.Name;
+                r.Id = id;
+                r.Image = k.Image;
+            }
+            ViewBag.Receptionist = r;
+            return View();
+        }
+
+        public ActionResult UpdateReceptionist(HttpPostedFileBase file,Receptionist receptionist,string photoName)
+        {
+            int id = Convert.ToInt32(Session["ReceptionistId"]);
+            string password = EncodePasswordMd5(receptionist.Password);
+            using (var ctx = new HospitalContext())
+            {
+                string image = photoName;
+                Receptionist p = ctx.Receptionist.Single(c => c.Id == id);
+                if (p.Password == password)
+                {
+                    if (file != null && file.ContentLength > 0)
+                    {
+                        string fullPath = Request.MapPath("~/" + photoName);
+                        if (System.IO.File.Exists(fullPath))
+                        {
+                            System.IO.File.Delete(fullPath);
+                        }
+                        try
+                        {
+                            string fileName = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(file.FileName);
+                            string uploadUrl = Server.MapPath("~/Photos");
+                            file.SaveAs(Path.Combine(uploadUrl, fileName));
+
+                           /* string path = Path.Combine(Server.MapPath("~/Photos/"),
+
+                                Path.GetFileName(file.FileName));
+                            file.SaveAs(path);*/
+                            image = "Photos/" + fileName;
+                        }
+                        catch (Exception ex)
+                        {
+                            ViewBag.Message = "ERROR:" + ex.Message.ToString();
+                        }
+                    }
+                    p.Name = receptionist.Name;
+                    p.Image = image;
+                    p.PhoneNo = receptionist.PhoneNo;
+                    ctx.SaveChanges();
+                    return RedirectToAction("ReceptionistProfile", "Receptionist", new { message = "Infomation Updated Successfully" });
+                }
+
+                return RedirectToAction("ReceptionistProfile", "Receptionist", new { message = "Update Failed" });
+
+            }
+
+        }
+        public static string EncodePasswordMd5(string pass) //Encrypt using MD5    
+        {
+            Byte[] originalBytes;
+            Byte[] encodedBytes;
+            MD5 md5;
+            //Instantiate MD5CryptoServiceProvider, get bytes for original password and compute hash (encoded password)    
+            md5 = new MD5CryptoServiceProvider();
+            originalBytes = ASCIIEncoding.Default.GetBytes(pass);
+            encodedBytes = md5.ComputeHash(originalBytes);
+            //Convert encoded bytes back to a 'readable' string    
+            return BitConverter.ToString(encodedBytes);
         }
 	}
 }
