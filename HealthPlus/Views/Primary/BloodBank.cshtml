@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewBag.Title = "BloodBank";
+}
+<link href="~/Content/DataTables/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet"/>
+<style>
+    .bx-box {
+        width: 100%;
+        display: inline-block;
+        margin-bottom: -40px;
+        opacity: 1;
+        background-image: url(../Photos/bloodg.jpg);
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .x2-box {
+        margin: 100px 100px 100px 100px;
+        padding: 33px;
+        border-radius: 10px 0 10px 0;
+        background-color: #fef8fc;
+        box-shadow: -2px 0px 20px 5px burlywood;
+        border-style: inset;
+        opacity: .97;
+    }
+</style>
+<div class="bx-box">
+
+    <div class="x2-box">
+        <div>
+            <center>
+                <table style="margin-bottom: 10px;">
+                    <tr>
+                        <td>Select Blood Group: </td>
+                        <td>
+                            <select name="group" id="group" class="form-control">
+                                <option value="">Select Blood Group</option>
+                                <option value="A+">A +</option>
+                                <option value="B+">B +</option>
+                                <option value="AB+">AB+</option>
+                                <option value="O+">O +</option>
+                                <option value="A-">A -</option>
+                                <option value="B-">B -</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O-">O -</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </center>
+        </div>
+        <div>
+            <table id="datatable" class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <td>Serial No.</td>
+                        <td>Donar Name</td>
+                        <td>Addresss</td>
+                        <td>Phone No</td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+</div>
+@section scripts{
+<script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#datatable').DataTable();
+
+            $('#group').on('change', function () {
+                var Id = $('#group').val();
+
+                table.clear().draw();
+
+                var serialNo = 1;
+                var json = { id: Id };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetBlood", "Primary")',
+                    contentType: 'application/json',
+                    data: JSON.stringify(json),
+                    success: function (response) {
+
+                        $.each(response, function (key, value) {
+                            table.row.add([
+                                serialNo,
+                                value.Name,
+                                value.Address,
+                                value.Phone
+                            ]).draw(false);
+                            serialNo += 1;
+                        });
+                    }
+                });
+            });
+        });
+       
+    </script>
+}

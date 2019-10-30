@@ -64,6 +64,7 @@
             <th class="th-sm"> Doctor Name </th>
             <th class="th-sm"> Designation</th>
             <th class="th-sm">Approval</th>
+            <th class="th-sm">Serial</th>
             <th class="th-sm">Prescription</th>
         </tr>
         </thead>
@@ -94,10 +95,25 @@
 
                 else if (d.Approval == 3)
                 {
+                    
                     <td class="seen">Seen</td>
                 }
+                @if (d.Approval == 1)
+                {
+                    <td>@d.Serial</td>
+                }
+                else
+                {
+                    <td>Not available</td>
+                }
 
-                <td>@d.Prescription</td>
+                <td>
+                    @if (d.Approval == 3)
+                    {
+                         <a href="#" onclick="window.open('../@d.Prescription', '_blank');;">Prescription</a>     
+                    }
+                   
+                </td>
             </tr>
             i = i + 1;
         }

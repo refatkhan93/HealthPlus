@@ -131,7 +131,11 @@
     <script>
 
         function approve(value) {
-            var json = { id: value, value: 1 };
+            var session = $('#session').val();
+            var docId = $('#doctor').val();
+            var date = $('#datetime').val();
+            var json = { id: value, value: 1, session: session, docId: docId, date: date };
+           
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("ChangeApproval", "Receptionist")',
@@ -187,6 +191,7 @@
                 $('#totala').empty();
 
                 table.clear();
+
                 var session = $('#session').val();
                 var docId = $('#doctor').val();
                 var date = $('#datetime').val();

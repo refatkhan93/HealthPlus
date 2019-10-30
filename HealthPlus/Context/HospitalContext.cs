@@ -15,6 +15,7 @@ namespace HealthPlus.Context
         public DbSet<Patient> Patient { get; set; }
         public DbSet<Appointment> Appointment { get; set; }
         public DbSet<Receptionist> Receptionist { get; set; }
+        public DbSet<Blood> Blood { get; set; }
 
 
     }

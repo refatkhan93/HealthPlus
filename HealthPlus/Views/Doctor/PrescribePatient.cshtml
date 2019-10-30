@@ -27,6 +27,13 @@
         padding: 7px;
         margin: 5px;
     }
+    .tgy {
+        padding: 17px;
+        background-color: aliceblue;
+        border-style: groove;
+        border-radius: 20px;
+        margin-bottom: 26px;
+    }
 </style>
 <div class="">
     <div class="himg">
@@ -43,46 +50,45 @@
 
 </div>
 <div class="container">
-    <div class="dTitle">
-        Patient's List
-    </div>
+    <center>
+        <div class="dTitle">
+            Patient's List
+        </div>
+        <div class="tgy">
+            <div class="row">
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-2" style="padding-top: 6px; font-size: 18px; font-weight: 500;">
+                    Select Session : 
+                </div>
+                <div class="col-md-3">
+                    <select name="session" class="form-control" id="session" style="text-align: center;">
+                        <option value="">Select an Session</option>
+                        <option value="1">Morning</option>
+                        <option value="2">Afternoon</option>
+                        <option value="3">Evening</option>
+                    </select>
+                </div>
+            </div>
+
+
+        </div>
+    </center>
+    
     <table id="datatable" class="table table-bordered table-striped table-hover">
         <thead>
         <tr>
             <td>Serial No.</td>
             <td>Patient's Name</td>
             <td>Age</td>
-            <td>History</td>
-            <td>Report</td>
+            <td>Note</td>
+            @*<td>Report</td>*@
 
             <td>Call</td>
-          
+
         </tr>
         </thead>
-        <tbody>
-        @{
-            int i = 1;
-        }
-        @foreach (Patient patient in Model)
-        {
-            string ca = "callbtn"+i;
-            <tr id="@i">
-                
-                <td id="serial">@i</td>
-                <td id="name">@patient.Name</td>
-                <td id="age">@patient.Age</td>
-               
 
-                <td><button id="@ca" style="width: 100%;" class="btn btn-success ttb">Call</button>
-                    <div style="height: 0; width: 0; visibility: hidden;" id="PatientId">@patient.Id</div></td>
-                
-            </tr>
-
-
-            i++;
-
-        }
-        </tbody>
     </table>
     <div class="row" style="margin-top: 40px;">
         <div class="col-md-3">
@@ -101,28 +107,27 @@
                     <td id="page"></td>
                 </tr>
                 <tr>
-                    <th>History : </th>
+                    <th>Note : </th>
                     <td id="phistory"></td>
                 </tr>
-                <tr>
+               @* <tr>
                     <th>Report : </th>
                     <td id="preport"></td>
-                </tr>
-                
+                </tr>*@
                 <tr>
                     <td>
-                        
+
                         <button style="width: 7em;" class="btn btn-success" id="previous"><i class=" fa fa-arrow-left"> </i><br/>Previous</button>
                     </td>
-                  
+
                     <td><button style="width: 7em;" class="btn btn-success" id="next"><i class=" fa fa-arrow-right"></i><br/>Next</button></td>
 
                 </tr>
             </table>
         </div>
         <div class="col-md-9">
-            <form method="POST" >
-                <div id="pid" >
+            <form method="POST">
+                <div id="pid">
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-1"></div>
@@ -131,25 +136,7 @@
                     <div class="col-sm-9">
 
                         <textarea style="height: 20em;" class="form-control" id="Prescript" name="Prescript" placeholder="Write your prescription"></textarea>
-                        <p class="ST">Select Tests</p>
-                        <div style="margin-bottom: 16px;">
-
-
-                            <select name="Tests[]" class="STD">
-                                <option value="">Blood Test</option>
-                                <option value="CBC">CBC</option>
-                                <option value="RCB">RCB</option>
-                                <option value="Dengu">Dengu</option>
-                                <option value="Suger">Suger</option>
-                            </select>
-                            <select name="Tests[]" class="STD">
-                                <option value="">Heart Test</option>
-                                <option value="BCirculer">BCirculer</option>
-                                <option value="Kidney">Kidney</option>
-                                <option value="Heart">Heart</option>
-                                <option value="Bypass">Bypass</option>
-                            </select>
-                        </div>
+                        
                         <button style="width: 100%;" type="submit" class="btn btn-success">Print Prescription</button>
                     </div>
                 </div>
@@ -168,6 +155,44 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
+            var table = $('#datatable').DataTable();
+           
+
+            $('#session').on('change', function () {
+                var Id = $('#session').val();
+
+                table.clear().draw();
+
+                var serialNo = 1;
+                var json = { id: Id };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetPatient", "Doctor")',
+                    contentType: 'application/json',
+                    data: JSON.stringify(json),
+                    success: function (response) {
+                        
+                        $.each(response, function (key, value) {
+                            console.log(value);
+                            var ca = "callbtn" + serialNo;
+                           var kv= "<button id= "+ca+"\" style=\"width: 100%;\" class=\"btn btn-success ttb\">Call</button>"+
+                     "<div style=\"height: 0; width: 0; visibility: hidden;\" id=\"PatientId\">" + value.PatientId + "</div>";
+                            table.row.add([
+                               serialNo,
+                               value.Name,
+                               value.Age,
+                               value.Note,
+                               kv
+                              
+                            ]).draw(false);
+                            serialNo+=1;
+                        });
+                    }
+                });
+            });
+
+
+
 
             $('#Prescript').summernote({
                 height: 240,
@@ -176,31 +201,31 @@
 
             });
 
-            var table = $('.table').DataTable();
+           
 
 
-            $('.ttb').on('click', function() {
+            $(document).on('click','.ttb', function() {
                 $('#prescription').code('');
                 $('#pserial').empty();
                 $('#pname').empty();
                 $('#page').empty();
                 $('#phistory').empty();
-                $('#preport').empty();
+                /*$('#preport').empty();*/
                 $('#pid').empty();
 
                 var $row = $(this).closest("tr"),
                     $t = $row.find("td:nth-child(1)").text(),
                     $name = $row.find("td:nth-child(2)").text(),
                     $age = $row.find("td:nth-child(3)").text(),
-                    $history = $row.find("td:nth-child(4)").text(),
-                    $report = $row.find("td:nth-child(5)").text();
-                var idd = $.trim($row.find("td:nth-child(6)").text().substr(4));
+                    $history = $row.find("td:nth-child(4)").text();
+                   /* $report = $row.find("td:nth-child(5)").text();*/
+                var idd = $.trim($row.find("td:nth-child(5)").text().substr(4));
                 console.log(idd);
                 $('#pserial').append($t);
                 $('#pname').append($name);
                 $('#page').append($age);
                 $('#phistory').append($history);
-                $('#preport').append($report);
+               /* $('#preport').append($report);*/
                 $('#pid').append('<input type="hidden" name="PatientId" value="' + idd + '">');
 
 
@@ -213,7 +238,7 @@
                 $('#pname').empty();
                 $('#page').empty();
                 $('#phistory').empty();
-                $('#preport').empty();
+                /*$('#preport').empty();*/
                 $('#pid').empty();
 
                 var knn = document.getElementById('pserial').innerHTML;
@@ -227,8 +252,8 @@
                 var $name = table.cell(kn, 1).data();
                 var $age = table.cell(kn, 2).data();
                 var $history = table.cell(kn, 3).data();
-                var $report = table.cell(kn, 4).data();
-                var idd = table.cell(kn, 5).data();
+                /*var $report = table.cell(kn, 4).data();*/
+                var idd = table.cell(kn, 4).data();
                 if (idd != null) {
                     var len = idd.length;
 
@@ -256,7 +281,7 @@
             $('#pname').append($name);
             $('#page').append($age);
             $('#phistory').append($history);
-            $('#preport').append($report);
+           /* $('#preport').append($report);*/
             $('#pid').append('<input type="hidden" name="PatientId" value="' + txt + '">');
 
 
@@ -270,7 +295,7 @@
             $('#pname').empty();
             $('#page').empty();
             $('#phistory').empty();
-            $('#preport').empty();
+          /*  $('#preport').empty();*/
             $('#pid').empty();
 
             var knn = document.getElementById('pserial').innerHTML;
@@ -288,8 +313,8 @@
             var name = table.cell(kn, 1).data();
             var age = table.cell(kn, 2).data();
             var history = table.cell(kn, 3).data();
-            var report = table.cell(kn, 4).data();
-            var idd = table.cell(kn, 5).data();
+           /* var report = table.cell(kn, 4).data();*/
+            var idd = table.cell(kn, 4).data();
 
             if (idd != null) {
                 var len = idd.length;
@@ -316,7 +341,7 @@
             $('#pname').append(name);
             $('#page').append(age);
             $('#phistory').append(history);
-            $('#preport').append(report);
+           /* $('#preport').append(report);*/
             $('#pid').append('<input type="hidden" name="PatientId" value="'+txt+'">');
 
 

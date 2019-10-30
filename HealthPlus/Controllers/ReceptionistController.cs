@@ -13,6 +13,7 @@ namespace HealthPlus.Controllers
 {
     public class ReceptionistController : Controller
     {
+        BaseController baseControl = new BaseController();
         public ReceptionistController()
         {
             if (System.Web.HttpContext.Current.Session["ReceptionistId"] == null)
@@ -104,12 +105,28 @@ namespace HealthPlus.Controllers
             return Json(pt);
         }
 
-        public JsonResult ChangeApproval(int id,int value)
+        public JsonResult ChangeApproval(int id,int value, int session,int docId,string date)
         {
+            int serial = 0;
             using (var ctx = new HospitalContext())
             {
+                
+                    int amount = ctx.Appointment.Where(c => c.DoctorId == docId && c.Session==session
+                       && c.Date==date && c.Approval==1).Select(c=>c.Id).ToList().Count();
+
+                if (value == 1)
+                {
+                    serial = amount + 1;
+                }
+                else
+                {
+                    
+                        serial = 0;
+                    
+                }
                 Appointment a = ctx.Appointment.Single(c => c.Id == id);
                 a.Approval = value;
+                a.SerialNo = serial;
                 ctx.SaveChanges();
             }
             return Json('1');
@@ -145,7 +162,7 @@ namespace HealthPlus.Controllers
         public ActionResult UpdateReceptionist(HttpPostedFileBase file,Receptionist receptionist,string photoName)
         {
             int id = Convert.ToInt32(Session["ReceptionistId"]);
-            string password = EncodePasswordMd5(receptionist.Password);
+            string password = baseControl.EncodePasswordMd5(receptionist.Password);
             using (var ctx = new HospitalContext())
             {
                 string image = photoName;
@@ -188,17 +205,6 @@ namespace HealthPlus.Controllers
             }
 
         }
-        public static string EncodePasswordMd5(string pass) //Encrypt using MD5    
-        {
-            Byte[] originalBytes;
-            Byte[] encodedBytes;
-            MD5 md5;
-            //Instantiate MD5CryptoServiceProvider, get bytes for original password and compute hash (encoded password)    
-            md5 = new MD5CryptoServiceProvider();
-            originalBytes = ASCIIEncoding.Default.GetBytes(pass);
-            encodedBytes = md5.ComputeHash(originalBytes);
-            //Convert encoded bytes back to a 'readable' string    
-            return BitConverter.ToString(encodedBytes);
-        }
+        
 	}
 }

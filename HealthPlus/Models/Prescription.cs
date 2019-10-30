@@ -13,8 +13,7 @@ namespace HealthPlus.Models
         [AllowHtml]
         public string Prescript { get; set; }
 
-        [AllowHtml]
-        public string Tests { get; set; }
+        
 
     }
 }

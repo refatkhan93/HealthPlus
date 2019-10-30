@@ -10,9 +10,9 @@ using HealthPlus.Models;
 
 namespace HealthPlus.Controllers
 {
-    public class AuthenticationController : Controller
+    public class AuthenticationController : Controller 
     {
-       
+        BaseController baseControl = new BaseController();
         //
         // GET: /Authentication/
         public ActionResult Login()
@@ -27,22 +27,12 @@ namespace HealthPlus.Controllers
                 return RedirectToAction("Index", "Primary");
             }
         }
-        public static string EncodePasswordMd5(string pass) //Encrypt using MD5    
-        {
-            Byte[] originalBytes;
-            Byte[] encodedBytes;
-            MD5 md5;
-            //Instantiate MD5CryptoServiceProvider, get bytes for original password and compute hash (encoded password)    
-            md5 = new MD5CryptoServiceProvider();
-            originalBytes = ASCIIEncoding.Default.GetBytes(pass);
-            encodedBytes = md5.ComputeHash(originalBytes);
-            //Convert encoded bytes back to a 'readable' string    
-            return BitConverter.ToString(encodedBytes);
-        }
+        
         [HttpPost]
         public ActionResult Login(Login login)
         {
-            string pass = EncodePasswordMd5(login.Password);
+            login.UserEmail = baseControl.Encrypt(login.UserEmail);
+            string pass = baseControl.EncodePasswordMd5(login.Password);
             using (var ctx = new HospitalContext())
             {
                 if (login.UserType == 1)
@@ -74,7 +64,7 @@ namespace HealthPlus.Controllers
                             Session["DoctorName"] = k.Name;
 
                         }
-                        return RedirectToAction("Index", "Primary");
+                        return RedirectToAction("PrescribePatient", "Doctor");
                     }
                     else
                     {
@@ -125,10 +115,14 @@ namespace HealthPlus.Controllers
         {
             using (var ctx = new HospitalContext())
             {
+                patient.Email = baseControl.Encrypt(patient.Email);
                 var count = ctx.Patient.Where(c => c.Email == patient.Email).ToList().Count;
                 if (count == 0)
                 {
-                    patient.Password = EncodePasswordMd5(patient.Password);
+                    patient.Password = baseControl.EncodePasswordMd5(patient.Password);
+                    patient.Name = baseControl.Encrypt(patient.Name);
+                    patient.Address = baseControl.Encrypt(patient.Address);
+                    patient.PhoneNo = baseControl.Encrypt(patient.PhoneNo);
                     ctx.Patient.Add(patient);
                     ctx.SaveChanges();
                 }
@@ -140,7 +134,6 @@ namespace HealthPlus.Controllers
             ViewBag.Success = '1';
             return View();
         }
-        
         public ActionResult PatientLogout()
         {
             Session["PatientId"] = null;
@@ -151,6 +144,13 @@ namespace HealthPlus.Controllers
         {
             Session["ReceptionistId"] = null;
             Session["ReceptionistName"] = null;
+            return RedirectToAction("Index", "Primary");
+        }
+
+        public ActionResult DoctorLogout()
+        {
+            Session["DoctorId"] = null;
+            Session["DoctorName"] = null;
             return RedirectToAction("Index", "Primary");
         }
 	}

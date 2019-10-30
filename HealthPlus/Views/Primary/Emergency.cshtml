@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewBag.Title = "Emergency";
+}
+<style>
+    .x-box {
+        margin: 25px 100px 100px 100px;
+        padding: 33px;
+        border-radius: 10px 0 10px 0;
+        background-color: #f5ecf5;
+        border-style: inset;
+    }
+     .interimage {
+         height: 19em;
+         width: 21em;
+         border: 1px solid;
+         border-radius: 10px;
+         box-shadow: 2px 2px 20px darkgrey;
+     }
+    .irow {
+        margin: 10px;
+        padding: 10px;
+    }
+</style>
+<div class="x-box">
+    <div class="row irow">
+        <div class="col-md-6">
+            <div>
+                <img class="interimage" src="~/Photos/ambulance.jpg" />
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div style="margin-top: 3em;">
+                <h4>Ambulance Service</h4>
+                <p>
+                    <b>Contact:</b><br />
+                    <i class="fa fa-phone"></i> +88-01751-214523<br />
+                    <i class="fa fa-phone"></i> +88-01751-214524<br />
+                    <i class="fa fa-tty"></i> 31-957625 <br />
+                    <b>Email:</b><br />
+                    <i class="fa fa-envelope"></i> info-ambulance@HealthPlus.com
+                </p>
+
+            </div>
+           
+        </div>
+    </div>
+    <div class="row irow">
+        <div class="col-md-6">
+            <div class="interimage">
+                <a href="@Url.Action("BloodBank","Primary")">
+                    <img class="interimage" src="~/Photos/blood.jpg" />
+                </a>
+            </div>
+            
+        </div>
+        <div class="col-md-6">
+            <div style="margin-top: 3em;">
+                <h4>Blood Bank Service</h4>
+                <p>
+                    <b>Contact:</b><br />
+                    <i class="fa fa-phone"></i> +88-01751-214523<br />
+                    <i class="fa fa-phone"></i> +88-01751-214524<br />
+                    <i class="fa fa-tty"></i> 31-957625 <br />
+                    <b>Email:</b><br />
+                    <i class="fa fa-envelope"></i> info-ambulance@HealthPlus.com<br/>
+                    Click Image to Find Blood.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="row irow">
+        <div class="col-md-6">
+            <div class="interimage">
+                <img class="interimage" src="~/Photos/antivenom.jpg" />
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div style="margin-top: 3em;">
+                <h4>Anti-Venom Service</h4>
+                <p>
+                    <b>Contact:</b><br />
+                    <i class="fa fa-phone"></i> +88-01751-214523<br />
+                    <i class="fa fa-phone"></i> +88-01751-214524<br />
+                    <i class="fa fa-tty"></i> 31-957625 <br />
+                    <b>Email:</b><br />
+                    <i class="fa fa-envelope"></i> info-ambulance@HealthPlus.com
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+</div>

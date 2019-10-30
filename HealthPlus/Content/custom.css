@@ -1,5 +1,12 @@
 ﻿body {
 }
+ .x-box {
+        margin: 25px 100px 100px 100px;
+        padding: 33px;
+        border-radius: 10px 0 10px 0;
+        background-color: #f5ecf5;
+        border-style: inset;
+    }
 .mtitle {
     position: absolute;
     width: 90%;
@@ -396,7 +403,6 @@
     text-align: center;
     padding: 12px;
     background-color: #98dca5;
-    margin-bottom: 26px;
     font-size: 30px;
     border-style: groove;
     border-radius: 20px;

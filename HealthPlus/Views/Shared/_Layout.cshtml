@@ -48,7 +48,7 @@
         <div class="navbar-nav">
             <a class="nav-item nav-link @ViewBag.Index" href="@Url.Action("Index","Primary")">Home <span class="sr-only">(current)</span></a>
             <a class="nav-item nav-link  @ViewBag.Appointment" href="@Url.Action("Appointment", "Primary")">Doctor</a>
-            <a class="nav-item nav-link @ViewBag.Emergency" href="#">Emergency</a>
+            <a class="nav-item nav-link @ViewBag.Emergency" href="@Url.Action("Emergency", "Primary")">Emergency</a>
             <a class="nav-item nav-link @ViewBag.Contact" href="#">Contact</a>
             <a class="nav-item nav-link  @ViewBag.Login" href="@Url.Action("Login","Authentication")">Login</a>
             <a class="nav-item nav-link  @ViewBag.Register" href="@Url.Action("Register","Authentication")">Register</a>
@@ -59,7 +59,7 @@
             <div class="navbar-nav">
                 <a class="nav-item nav-link @ViewBag.Index" href="@Url.Action("Index","Primary")">Home <span class="sr-only">(current)</span></a>
                 <a class="nav-item nav-link  @ViewBag.Appointment" href="@Url.Action("Appointment", "Primary")">Appointment</a>
-                <a class="nav-item nav-link @ViewBag.Emergency" href="#">Emergency</a>
+                <a class="nav-item nav-link @ViewBag.Emergency" href="@Url.Action("Emergency", "Primary")">Emergency</a>
                 <a class="nav-item nav-link @ViewBag.Contact" href="#">Contact</a>
                 <a class="nav-item nav-link  @ViewBag.PatientProfile" href="@Url.Action("Profile", "Patient")">Profile</a>
                 <a class="nav-item nav-link " href="@Url.Action("PatientLogout","Authentication")">Logout</a>
@@ -68,12 +68,12 @@
         @if (Session["DoctorId"] != null)
         {
             <div class="navbar-nav">
-                <a class="nav-item nav-link @ViewBag.Index" href="Index">Home <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link  @ViewBag.Doctor" href="Doctor">Doctor</a>
-                <a class="nav-item nav-link @ViewBag.Emergency" href="#">Emergency</a>
+                <a class="nav-item nav-link @ViewBag.Index" href="@Url.Action("Index","Primary")">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link  @ViewBag.PrescribePatient" href="@Url.Action("PrescribePatient","Doctor")">Prescribe Patient</a>
+                <a class="nav-item nav-link @ViewBag.Emergency" href="@Url.Action("Emergency", "Primary")">Emergency</a>
                 <a class="nav-item nav-link @ViewBag.Contact" href="#">Contact</a>
-                <a class="nav-item nav-link  @ViewBag.DoctorProfile" href="DoctorProfile">Profile</a>
-                <a class="nav-item nav-link " href="DoctorLogout">Logout</a>
+                <a class="nav-item nav-link  @ViewBag.DoctorProfile" href="#">Profile</a>
+                <a class="nav-item nav-link " href="@Url.Action("DoctorLogout","Authentication")">Logout</a>
                 
             </div>
         }
@@ -82,9 +82,9 @@
             <div class="navbar-nav">
                 <a class="nav-item nav-link @ViewBag.Index" href="@Url.Action("Index","Primary")">Home <span class="sr-only">(current)</span></a>
                 <a class="nav-item nav-link  @ViewBag.AppointmentSchedule" href="@Url.Action("AppointmentSchedule", "Receptionist")">Appointment Schedule</a>
-                <a class="nav-item nav-link @ViewBag.Contact" href="#">Contact</a>
+                <a class="nav-item nav-link @ViewBag.Emergency" href="@Url.Action("Emergency", "Primary")">Contact</a>
                 <a class="nav-item nav-link  @ViewBag.Report" href="@Url.Action("Report", "Receptionist")">Report</a>
-                <a class="nav-item nav-link  @ViewBag.Report" href="@Url.Action("ReceptionistProfile", "Receptionist")">Profile</a>
+                <a class="nav-item nav-link  @ViewBag.ReceptionistProfile" href="@Url.Action("ReceptionistProfile", "Receptionist")">Profile</a>
                 <a class="nav-item nav-link " href="@Url.Action("ReceptionistLogout","Authentication")">Logout</a>
                 
             </div>

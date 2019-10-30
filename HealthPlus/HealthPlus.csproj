@@ -171,6 +171,8 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Context\HospitalContext.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\DoctorController.cs" />
     <Compile Include="Controllers\PatientController.cs" />
     <Compile Include="Controllers\PrimaryController.cs" />
     <Compile Include="Controllers\ReceptionistController.cs" />
@@ -179,6 +181,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Appointment.cs" />
+    <Compile Include="Models\Blood.cs" />
     <Compile Include="Models\Doctor.cs" />
     <Compile Include="Models\DoctorAppointmentView.cs" />
     <Compile Include="Models\DoctorCategory.cs" />
@@ -693,9 +696,11 @@
     <Content Include="Scripts\popper.min.js.map" />
     <Content Include="Scripts\README.md" />
     <Content Include="Views\Primary\Appointment.cshtml" />
-    <Content Include="Views\Primary\Doctor.cshtml" />
+    <Content Include="Views\Doctor\PrescribePatient.cshtml" />
+    <Content Include="Views\Primary\Emergency.cshtml" />
+    <Content Include="Views\Primary\BloodBank.cshtml" />
     <None Include="Views\Primary\Index.cshtml" />
-    <Content Include="Views\Primary\MakePdf.cshtml" />
+    <Content Include="Views\Doctor\MakePdf.cshtml" />
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Authentication\Register.cshtml" />
     <Content Include="Views\Patient\Profile.cshtml" />
@@ -706,6 +711,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\CustomDesign\" />
+    <Folder Include="PatientPrescriptions\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

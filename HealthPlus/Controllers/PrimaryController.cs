@@ -52,38 +52,6 @@ namespace HealthPlus.Controllers
             return View();
         }
 
-      
-        public ActionResult Doctor()
-        {
-            ViewBag.Doctor= "active";
-            List <Patient> pList= new List<Patient>();
-           
-            return View(pList);
-        }
-
-        [HttpPost]
-        [ValidateInput(false)]
-        public ActionResult Doctor(Prescription prescription,string[] Tests )
-        {
-            ViewBag.Doctor = "active";
-            string text = "";
-            foreach (string t in Tests)
-            {
-                text += t +"<br>";
-
-            }
-            prescription.Tests = text;
-            string name;
-            name = DateTime.Now.ToString("dd/MM/yyyy") + "_" + prescription.PatientId +".pdf";
-            var printpdf = new ActionAsPdf("MakePdf", prescription) { FileName = name };
-            return printpdf;
-           
-        }
-        public ActionResult MakePdf(Prescription idPrescription)
-        {
-           
-            return View(idPrescription);
-        }
 
         [HttpPost]
         public JsonResult GetAllDocById(int id)
@@ -92,7 +60,6 @@ namespace HealthPlus.Controllers
             List<Doctor> Dlist = new List<Doctor>();
             using (var ctx = new HospitalContext())
             {
-                //Dlist = ctx.Doctor.SqlQuery("SELECT * FROM Doctor WHERE CategoryId_Id="+id).ToList();
                 var k = ctx.Doctor.Where(c=>c.CategoryId.Id==id).Select(c=>new {c.Id,c.Name,c.Designation,c.Degree,c.Image,c.Fees,c.Schedule}).ToList();
                 foreach (var dc in k)
                 {
@@ -112,14 +79,34 @@ namespace HealthPlus.Controllers
 
         }
 
-      
-        public ActionResult DoctorLogout()
+        public ActionResult Emergency()
         {
-            Session["DoctorId"] = null;
-            Session["DoctorName"] = null;
-            return RedirectToAction("Index", "Primary");
+            return View();
         }
 
+        public ActionResult BloodBank()
+        {
+            return View();
+        }
+
+        public ActionResult GetBlood(string id)
+        {
+            List<Blood> Dlist = new List<Blood>();
+            using (var ctx = new HospitalContext())
+            {
+                var k = ctx.Blood.Where(c => c.BloodGroup == id).Select(c => new {  c.Name,c.Address,c.Phone }).ToList();
+                foreach (var dc in k)
+                {
+                    Blood d = new Blood();
+                    d.Name = dc.Name;
+                    d.Address = dc.Address;
+                    d.Phone = dc.Phone;
+                    Dlist.Add(d);
+                }
+            }
+
+            return Json(Dlist);
+        }
       
 	}
 }

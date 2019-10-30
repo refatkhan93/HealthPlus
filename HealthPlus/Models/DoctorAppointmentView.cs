@@ -12,6 +12,6 @@ namespace HealthPlus.Models
         public string Name { get; set; }
         public int Approval { get; set; }
         public string Designation { get; set; }
-
+        public int Serial { get; set; }
     }
 }

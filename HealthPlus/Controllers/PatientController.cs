@@ -12,6 +12,7 @@ namespace HealthPlus.Controllers
 {
     public class PatientController : Controller
     {
+        BaseController baseControl = new BaseController();
         public PatientController()
         {
             if (System.Web.HttpContext.Current.Session["PatientId"] == null)
@@ -41,20 +42,23 @@ namespace HealthPlus.Controllers
             
             ViewBag.Profile = "active";
             ViewBag.UpdateMessage = message;
+            int pid = (int) Session["PatientId"];
+            
             List<DoctorAppointmentView> ProfileList = new List<DoctorAppointmentView>();
             Patient p = new Patient();
             using (var ctx = new HospitalContext())
             {
                 var data = (from a in ctx.Appointment
                             join d in ctx.Doctor on a.DoctorId equals d.Id
-                            where a.DoctorId == d.Id
+                            where a.DoctorId == d.Id && a.PatientId==pid
                             select new
                             {
                                 aDate = a.Date,
                                 aApproval = a.Approval,
                                 aName = d.Name,
                                 aPrescription = a.Prescription,
-                                aDesignation = d.Designation
+                                aDesignation = d.Designation,
+                                aSerial=a.SerialNo
                             });
                 foreach (var d in data)
                 {
@@ -64,20 +68,20 @@ namespace HealthPlus.Controllers
                     dc.Approval = d.aApproval;
                     dc.Date = d.aDate;
                     dc.Prescription = d.aPrescription;
+                    dc.Serial = d.aSerial;
                     ProfileList.Add(dc);
                 }
-                int id = Convert.ToInt32(Session["PatientId"]);
-                var k = ctx.Patient.Where(e => e.Id == id).Select(c => new { c.Name, c.Age, c.Address, c.PhoneNo });
+               // int id = Convert.ToInt32(Session["PatientId"]);
+                var k = ctx.Patient.Where(e => e.Id == pid).Select(c => new { c.Name, c.Age, c.Address, c.PhoneNo });
                 foreach (var i in k)
                 {
-                    p.Name = i.Name;
-                    p.Address = i.Address;
+                    p.Name = baseControl.Decrypt(i.Name);
+                    p.Address = baseControl.Decrypt(i.Address);
                     p.Age = i.Age;
-                    p.PhoneNo = i.PhoneNo;
+                    p.PhoneNo = baseControl.Decrypt(i.PhoneNo);
                 }
                 ViewBag.Patient = p;
             }
-
             return View(ProfileList);
         }
 
@@ -85,16 +89,16 @@ namespace HealthPlus.Controllers
         {
            
             int id = Convert.ToInt32(Session["PatientId"]);
-            string password = EncodePasswordMd5(patient.Password);
+            string password = baseControl.EncodePasswordMd5(patient.Password);
             using (var ctx = new HospitalContext())
             {
                 Patient p = ctx.Patient.Single(c => c.Id == id);
                 if (p.Password == password)
                 {
-                    p.Name = patient.Name;
+                    p.Name = baseControl.Encrypt(patient.Name);
                     p.Age = patient.Age;
-                    p.Address = patient.Address;
-                    p.PhoneNo = patient.PhoneNo;
+                    p.Address = baseControl.Encrypt(patient.Address);
+                    p.PhoneNo = baseControl.Encrypt(patient.PhoneNo);
                     ctx.SaveChanges();
                     return RedirectToAction("Profile", "Patient", new { message = "Infomation Updated Successfully" });
                 }
@@ -103,17 +107,6 @@ namespace HealthPlus.Controllers
 
             }
         }
-        public static string EncodePasswordMd5(string pass) //Encrypt using MD5    
-        {
-            Byte[] originalBytes;
-            Byte[] encodedBytes;
-            MD5 md5;
-            //Instantiate MD5CryptoServiceProvider, get bytes for original password and compute hash (encoded password)    
-            md5 = new MD5CryptoServiceProvider();
-            originalBytes = ASCIIEncoding.Default.GetBytes(pass);
-            encodedBytes = md5.ComputeHash(originalBytes);
-            //Convert encoded bytes back to a 'readable' string    
-            return BitConverter.ToString(encodedBytes);
-        }
+       
 	}
 }
