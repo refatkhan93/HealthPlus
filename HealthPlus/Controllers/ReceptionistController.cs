@@ -93,9 +93,9 @@ namespace HealthPlus.Controllers
                 {
                     PatientAppointmentView p=new PatientAppointmentView();
                     p.AppointmentId = dc.pId;
-                    p.Name = dc.pName;
-                    p.Address = dc.pAddress;
-                    p.PhoneNo = dc.pPhone;
+                    p.Name = baseControl.Decrypt(dc.pName);
+                    p.Address = baseControl.Decrypt(dc.pAddress);
+                    p.PhoneNo = baseControl.Decrypt(dc.pPhone);
                     p.Approval = dc.pApprove;
                     p.Note = dc.pNote;
                     pt.Add(p);
@@ -150,8 +150,8 @@ namespace HealthPlus.Controllers
                         .Select(c => new {c.Name, c.PhoneNo, c.Image})
                         .FirstOrDefault();
                 
-                r.PhoneNo = k.PhoneNo;
-                r.Name = k.Name;
+                r.PhoneNo = baseControl.Decrypt(k.PhoneNo);
+                r.Name = baseControl.Decrypt(k.Name);
                 r.Id = id;
                 r.Image = k.Image;
             }
@@ -193,9 +193,9 @@ namespace HealthPlus.Controllers
                             ViewBag.Message = "ERROR:" + ex.Message.ToString();
                         }
                     }
-                    p.Name = receptionist.Name;
+                    p.Name = baseControl.Encrypt(receptionist.Name);
                     p.Image = image;
-                    p.PhoneNo = receptionist.PhoneNo;
+                    p.PhoneNo = baseControl.Encrypt(receptionist.PhoneNo);
                     ctx.SaveChanges();
                     return RedirectToAction("ReceptionistProfile", "Receptionist", new { message = "Infomation Updated Successfully" });
                 }

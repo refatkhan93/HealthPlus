@@ -12,6 +12,7 @@ namespace HealthPlus.Controllers
 {
     public class DoctorController : Controller
     {
+        BaseController baseControl = new BaseController();
         //
         // GET: /Doctor/
         public ActionResult PrescribePatient()
@@ -42,7 +43,7 @@ namespace HealthPlus.Controllers
                 {
                     PatientAppointmentView p = new PatientAppointmentView();
                     p.PatientId = dc.pId;
-                    p.Name = dc.pName;
+                    p.Name = baseControl.Decrypt(dc.pName);
                     p.Age = dc.pAge;
                     p.Note = dc.pNote;
                     pt.Add(p);
