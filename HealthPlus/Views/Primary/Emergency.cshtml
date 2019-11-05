@@ -2,7 +2,8 @@
 @{
     ViewBag.Title = "Emergency";
 }
-<style>
+@section design{
+    <style>
     .x-box {
         margin: 25px 100px 100px 100px;
         padding: 33px;
@@ -10,18 +11,23 @@
         background-color: #f5ecf5;
         border-style: inset;
     }
-     .interimage {
-         height: 19em;
-         width: 21em;
-         border: 1px solid;
-         border-radius: 10px;
-         box-shadow: 2px 2px 20px darkgrey;
-     }
+
+    .interimage {
+        height: 19em;
+        width: 21em;
+        border: 1px solid;
+        border-radius: 10px;
+        box-shadow: 2px 2px 20px darkgrey;
+    }
+
     .irow {
         margin: 10px;
         padding: 10px;
     }
 </style>
+
+}
+
 <div class="x-box">
     <div class="row irow">
         <div class="col-md-6">

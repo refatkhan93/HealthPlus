@@ -1,0 +1,95 @@
+﻿@using HealthPlus.Models
+@model List<Ward>
+@{
+    ViewBag.Title = "PatientAdmitWard";
+}
+
+<link href="~/Content/DataTables/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
+<div class="x-box-2">
+    <center>
+        <table style="margin: 40px;">
+            <tr>
+                <td style="width: 45%;">Select Ward</td>
+                <td>   </td>
+                <td>
+                    <select onchange="Changeonward()"  name="wards" id="wards" class="form-control" style="width: 140%;">
+                        <option value="">Select Ward</option>
+                        @foreach (Ward ward in Model)
+                        {
+                            <option value="@ward.Id">@ward.Name</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+        </table>
+        
+    </center>
+    <table id="datatable" class="table table-bordered table-striped table-hover">
+        <thead>
+        <tr>
+            <td>Serial No.</td>
+            <td>Patient's Name</td>
+            <td>Age</td>
+            <td>Address</td>
+            <td>Doctor Name</td>
+            <td>Prescription</td>
+            <td>Action</td>
+        </tr>
+        </thead>
+    </table>
+</div>
+@section scripts{
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script>
+        function releasePatient(id) {
+            var ward = $('#wards').val();
+            var json = { id: id, wardId: ward };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ReleasePatient", "Admin")',
+                contentType: 'application/json',
+                data: JSON.stringify(json),
+                success: function (response) {
+                    Changeonward();
+
+                }
+            });
+        }
+        var table = $('#datatable').DataTable();
+
+            function Changeonward() {
+                var Id = $('#wards').val();
+
+                table.clear().draw();
+
+                var serialNo = 1;
+                var json = { id: Id };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetPatientByWard", "Admin")',
+                    contentType: 'application/json',
+                    data: JSON.stringify(json),
+                    success: function(response) {
+
+                        $.each(response, function(key, value) {
+                            var pres = "<a href=\"#\" onclick=\"window.open('../"+value.Prescript+"','_blank');\">Prescription</a>";
+                            var ca = "callbtn" + serialNo;
+                            var kv = "<button id= " + ca + "\" style=\"width: 100%;\" onclick=\"releasePatient(" + value.Id + ")\" class=\"btn btn-success ttb\">Release</button>";
+                               
+                            table.row.add([
+                                serialNo,
+                                value.PatientName,
+                                value.PatientAge,
+                                value.PatientAddress,
+                                value.DoctorName,
+                                pres,
+                                kv
+                            ]).draw(false);
+                            serialNo += 1;
+                        });
+                    }
+                });
+            };
+    </script>
+}

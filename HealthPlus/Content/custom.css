@@ -1,5 +1,11 @@
 ﻿body {
 }
+.x-box-2 {
+    margin: 25px 100px 100px 100px;
+    padding: 33px;
+    border-radius: 10px 0 10px 0;
+    border-style: inset;
+}
  .x-box {
         margin: 25px 100px 100px 100px;
         padding: 33px;

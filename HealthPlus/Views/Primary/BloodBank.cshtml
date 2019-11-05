@@ -2,8 +2,9 @@
 @{
     ViewBag.Title = "BloodBank";
 }
-<link href="~/Content/DataTables/css/dataTables.bootstrap.min.css" rel="stylesheet" />
-<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet"/>
+@section design{
+    <link href="~/Content/DataTables/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
 <style>
     .bx-box {
         width: 100%;
@@ -14,6 +15,7 @@
         background-repeat: no-repeat;
         background-size: cover;
     }
+
     .x2-box {
         margin: 100px 100px 100px 100px;
         padding: 33px;
@@ -24,6 +26,8 @@
         opacity: .97;
     }
 </style>
+}
+
 <div class="bx-box">
 
     <div class="x2-box">

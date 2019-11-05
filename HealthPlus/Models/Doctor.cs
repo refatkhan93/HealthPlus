@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.UI.WebControls;
 
 namespace HealthPlus.Models
 {
@@ -18,7 +20,8 @@ namespace HealthPlus.Models
         public int Fees { get; set; }
         public string Schedule { get; set; }
 
-        public virtual  DoctorCategory CategoryId  { get; set; }
+        [DisplayName("Category")]
+        public int CategoryId { get; set; }
 
     }
 }

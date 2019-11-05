@@ -1,0 +1,153 @@
+﻿@using HealthPlus.Models
+@model List<HealthPlus.Models.Ward>
+@{
+    ViewBag.Title = "AssignNurse";
+}
+
+<link href="~/Content/DataTables/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet"/>
+<style>
+    .lbl {
+        margin-right: 25px;
+    }
+</style>
+<div class="x-box-2">
+    <center>
+        <table>
+            <tr>
+                <td><label class="lbl" for="ward">Select Ward</label></td>
+                <td>
+                    <select onchange="wardChange()" name="ward" id="ward" class="form-control" style="width: 14em;">
+                        <option value="">Select Ward</option>
+                        @foreach (Ward w in Model)
+                        {
+                            <option value="@w.Id">@w.Name</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="lbl" for="nurse">Select Nurse</label></td>
+                <td>
+                    <select  name="nurse" id="nurse" class="form-control">
+                        <option value="">Select Nurse</option>
+                        @foreach (Nurse n in ViewBag.Nurse)
+                        {
+                            <option value="@n.Id">@n.Name</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button style="width: 100%;" onclick="assignNurse()" class="btn btn-success">Assign</button></td>
+            </tr>
+        </table>
+
+    </center>
+    <table id="datatable" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td>Serial No.</td>
+                <td>Nurse Name</td>
+                <td>Designation</td>
+                <td>Image</td>
+                <td>Action</td>
+
+            </tr>
+        </thead>
+
+    </table>
+</div>
+@section scripts{
+
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script>
+        var table = $('#datatable').DataTable();
+
+        function wardChange() {
+            var Id = $('#ward').val();
+
+            table.clear().draw();
+
+            var serialNo = 1;
+            var json = { id: Id };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetNurseByWard", "Admin")',
+                contentType: 'application/json',
+                data: JSON.stringify(json),
+                success: function(response) {
+
+                    $.each(response, function(key, value) {
+                        var img = "<img style=\"height: 70px;\" src=\"../" + value.Image + "\">";
+                        var ca = "callbtn" + serialNo;
+                        var kv = "<button onclick=\"releaseNurse(" + value.Id + ")\" id= " + ca + "\" style=\"width: 100%;\" class=\"btn btn-danger ttb\">Release Duty</button>";
+                        table.row.add([
+                            serialNo,
+                            value.Name,
+                            value.Designation,
+                            img,
+                            kv
+                        ]).draw(false);
+                        serialNo += 1;
+                    });
+                }
+            });
+        }
+
+        function nurseAppend() {
+            var json = { id: 0 };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetNurseByWard", "Admin")',
+                contentType: 'application/json',
+                data: JSON.stringify(json),
+                success: function (response) {
+                    $('#nurse').empty();
+                   $('#nurse').append("<option value=\"\">Select Nurse</option>");
+                    $.each(response, function (key, value) {
+                        $('#nurse').append("<option value=\""+value.Id+"\">"+value.Name+"</option>");
+                    });
+                }
+            });
+        }
+
+        function releaseNurse(id) {
+            var json = { id: id };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeAssignNurse", "Admin")',
+                contentType: 'application/json',
+                data: JSON.stringify(json),
+                success: function(response) {
+
+                    wardChange();
+                    nurseAppend();
+                }
+            });
+
+        }
+
+        function assignNurse() {
+            var Id = $('#nurse').val();
+            var Wid = $('#ward').val();
+            table.clear().draw();
+
+            
+            var json = { nurseId: Id, wardId: Wid };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AssignNurseToWard", "Admin")',
+                contentType: 'application/json',
+                data: JSON.stringify(json),
+                success: function(response) {
+                    wardChange();
+                    console.log('Ward Finish');
+                    nurseAppend();
+                    console.log('Append Finish');
+                }
+            });
+        }
+    </script>
+}

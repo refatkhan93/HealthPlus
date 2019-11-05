@@ -41,12 +41,12 @@ namespace HealthPlus.Controllers
             List<Doctor> Dlist = new List<Doctor>();
             using (var ctx = new HospitalContext())
             {
-                var k = ctx.Doctor.Where(c => c.CategoryId.Id == id).Select(c => new { c.Id, c.Name,c.Schedule}).ToList();
+                var k = ctx.Doctor.Where(c => c.CategoryId == id).Select(c => new { c.Id, c.Name,c.Schedule}).ToList();
                 foreach (var dc in k)
                 {
                     Doctor d = new Doctor();
                     d.Id = dc.Id;
-                    d.Name = dc.Name;
+                    d.Name = baseControl.Decrypt(dc.Name);
                     d.Schedule = dc.Schedule;
                     Dlist.Add(d);
                 }
@@ -97,7 +97,7 @@ namespace HealthPlus.Controllers
                     p.Address = baseControl.Decrypt(dc.pAddress);
                     p.PhoneNo = baseControl.Decrypt(dc.pPhone);
                     p.Approval = dc.pApprove;
-                    p.Note = dc.pNote;
+                    p.Note = baseControl.Decrypt(dc.pNote);
                     pt.Add(p);
                 }
                 
@@ -140,6 +140,7 @@ namespace HealthPlus.Controllers
 
         public ActionResult ReceptionistProfile(string message)
         {
+            ViewBag.ReceptionistProfile = "active";
             ViewBag.UpdateMessage = message;
             Receptionist r=new Receptionist();
             int id = Convert.ToInt32(Session["ReceptionistId"]);

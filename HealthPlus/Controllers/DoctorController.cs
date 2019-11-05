@@ -17,7 +17,14 @@ namespace HealthPlus.Controllers
         // GET: /Doctor/
         public ActionResult PrescribePatient()
         {
-            return View();
+            ViewBag.PrescribePatient = "active";
+            List<Ward> wards;
+            using (var ctx =new HospitalContext())
+            {
+                wards = ctx.Ward.ToList();
+            }
+            
+            return View(wards);
         }
 
         public JsonResult GetPatient(int id)
@@ -42,10 +49,10 @@ namespace HealthPlus.Controllers
                 foreach (var dc in data)
                 {
                     PatientAppointmentView p = new PatientAppointmentView();
-                    p.PatientId = dc.pId;
+                    p.AppointmentId = dc.pId;
                     p.Name = baseControl.Decrypt(dc.pName);
                     p.Age = dc.pAge;
-                    p.Note = dc.pNote;
+                    p.Note = baseControl.Decrypt(dc.pNote);
                     pt.Add(p);
                 }
             }
@@ -53,26 +60,58 @@ namespace HealthPlus.Controllers
         }
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult PrescribePatient(Prescription prescription,int PatientId)
+        public ActionResult PrescribePatient(Prescription prescription,int AppointmentId)
         {
-            ViewBag.Doctor = "active";
+            ViewBag.PrescribePatient = "active";
             string name;
-            name = DateTime.Now.ToString("dd-MM-yyyy") + "_" + prescription.PatientId+"_"+Guid.NewGuid()+ ".pdf";
-            var printpdf = new ActionAsPdf("MakePdf", prescription) { FileName = name };
-            string path = Server.MapPath("~/PatientPrescriptions");
-            string pth=Path.Combine(path, name);
-            var byteArray = printpdf.BuildPdf(ControllerContext);
-            var fileStream = new FileStream(pth, FileMode.Create, FileAccess.Write);
-            fileStream.Write(byteArray, 0, byteArray.Length);
-            fileStream.Close();
+            name = DateTime.Now.ToString("dd-MM-yyyy") + "_" + prescription.PatientId + "_" + Guid.NewGuid() + ".pdf";
             using (var ctx = new HospitalContext())
             {
-                Appointment ap = ctx.Appointment.Single(c => c.Id == PatientId);
+                if (prescription.WardId > 0)
+                {
+                    Appointment appointment = ctx.Appointment.Find(AppointmentId);
+                    appointment.WardId = prescription.WardId;
+                    ctx.SaveChanges();
+                }
+                
+                var kl = from a in ctx.Appointment
+                    join p in ctx.Patient
+                        on a.PatientId equals p.Id
+                    join d in ctx.Doctor
+                        on a.DoctorId equals d.Id
+                    where a.Id == AppointmentId
+                    select new
+                    {
+                        DoctorName= d.Name,
+                        DoctorDesignation=d.Designation,
+                        DoctorDegree=d.Degree,
+                        PatientName=p.Name,
+                        PatientPhone=p.PhoneNo,
+                        PatientAge=p.Age
+                    };
+                foreach (var v in kl)
+                {
+                    prescription.DoctorDesignation = baseControl.Decrypt(v.DoctorDesignation);
+                    prescription.DoctorName = baseControl.Decrypt(v.DoctorName);
+                    prescription.DoctorDegree = baseControl.Decrypt(v.DoctorDegree);
+                    prescription.PatientName = baseControl.Decrypt(v.PatientName);
+                    prescription.PatientAge = v.PatientAge;
+                    prescription.PatientPhone = baseControl.Decrypt(v.PatientPhone);
+                }
+
+                Appointment ap = ctx.Appointment.Single(c => c.Id == AppointmentId);
                 ap.Prescription = "PatientPrescriptions/"+name;
                 ap.Approval = 3;
                 ctx.SaveChanges();
             }
-
+            
+            var printpdf = new ActionAsPdf("MakePdf", prescription) { FileName = name };
+            string path = Server.MapPath("~/PatientPrescriptions");
+            string pth = Path.Combine(path, name);
+            var byteArray = printpdf.BuildPdf(ControllerContext);
+            var fileStream = new FileStream(pth, FileMode.Create, FileAccess.Write);
+            fileStream.Write(byteArray, 0, byteArray.Length);
+            fileStream.Close();
             return printpdf;
 
         }

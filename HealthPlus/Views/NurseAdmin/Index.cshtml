@@ -1,0 +1,86 @@
+﻿@model IEnumerable<HealthPlus.Models.Nurse>
+
+@{
+    ViewBag.Title = "Index";
+}
+@section design{
+<link href="~/Content/DataTables/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
+<style>
+    .col-sz {
+        width: 100px;
+    }
+
+    .wd {
+        width: 100%;
+    }
+</style>
+
+}
+
+<div class="x-box-2">
+    <center>
+        <p>
+            @Html.ActionLink("Appoint New Nurse", "Create",null,new {@class="newbox btn btn-primary"})
+        </p>
+    </center>
+    <table id="datatable" class="table table-bordered table-striped table-hover">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Designation)
+            </th>
+            
+            <th>
+                Action
+            </th>
+        </tr>
+        </thead>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+
+                <td>
+                    <img style="height: 98px;" src="~/@Html.DisplayFor(modelItem => item.Image)">
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Designation)
+                </td>
+                
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary wd" }) <br/>
+
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger wd" })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+</div>
+
+@section scripts{
+<script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script>
+    $(document).ready(function () {
+    var table = $('#datatable').DataTable();
+    });
+    </script>
+}

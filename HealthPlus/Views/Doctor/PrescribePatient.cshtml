@@ -1,5 +1,5 @@
 ﻿@using HealthPlus.Models
-@model List<Patient>
+@model List<Ward>
 @{
     ViewBag.Title = "Doctor";
 }
@@ -136,7 +136,13 @@
                     <div class="col-sm-9">
 
                         <textarea style="height: 20em;" class="form-control" id="Prescript" name="Prescript" placeholder="Write your prescription"></textarea>
-                        
+                        <select class="form-control" style="margin: 25px 0;"name="WardId">
+                            <option value="0">Select Ward to Admit</option>
+                            @foreach (Ward ward in Model)
+                            {
+                                <option value="@ward.Id">@ward.Name</option>
+                            }
+                        </select>
                         <button style="width: 100%;" type="submit" class="btn btn-success">Print Prescription</button>
                     </div>
                 </div>
@@ -176,7 +182,7 @@
                             console.log(value);
                             var ca = "callbtn" + serialNo;
                            var kv= "<button id= "+ca+"\" style=\"width: 100%;\" class=\"btn btn-success ttb\">Call</button>"+
-                     "<div style=\"height: 0; width: 0; visibility: hidden;\" id=\"PatientId\">" + value.PatientId + "</div>";
+                     "<div style=\"height: 0; width: 0; visibility: hidden;\" id=\"AppointmentId\">" + value.AppointmentId + "</div>";
                             table.row.add([
                                serialNo,
                                value.Name,
@@ -226,7 +232,7 @@
                 $('#page').append($age);
                 $('#phistory').append($history);
                /* $('#preport').append($report);*/
-                $('#pid').append('<input type="hidden" name="PatientId" value="' + idd + '">');
+                $('#pid').append('<input type="hidden" name="AppointmentId" value="' + idd + '">');
 
 
                 return false;
@@ -282,7 +288,7 @@
             $('#page').append($age);
             $('#phistory').append($history);
            /* $('#preport').append($report);*/
-            $('#pid').append('<input type="hidden" name="PatientId" value="' + txt + '">');
+            $('#pid').append('<input type="hidden" name="AppointmentId" value="' + txt + '">');
 
 
             return false;
@@ -342,7 +348,7 @@
             $('#page').append(age);
             $('#phistory').append(history);
            /* $('#preport').append(report);*/
-            $('#pid').append('<input type="hidden" name="PatientId" value="'+txt+'">');
+            $('#pid').append('<input type="hidden" name="AppointmentId" value="'+txt+'">');
 
 
             return false;

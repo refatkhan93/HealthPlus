@@ -16,5 +16,7 @@ namespace HealthPlus.Models
         public string Date { get; set; }
         public int Session { get; set; }
         public string Prescription { get; set; }
+        public int WardId { get; set; }
+
     }
 }

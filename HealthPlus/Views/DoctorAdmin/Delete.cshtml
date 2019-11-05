@@ -1,0 +1,92 @@
+﻿@model HealthPlus.Models.Doctor
+
+@{
+    ViewBag.Title = "Delete";
+}
+@section design{
+<link href="~/Content/DataTables/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+}
+
+<div class="x-box-2">
+    <h3>Are you sure you want to delete this?</h3>
+    <hr />
+    <table id="datatable" class="table table-bordered table-striped table-hover">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Designation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Degree)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fees)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Schedule)
+            </th>
+            
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                @Html.DisplayFor(item => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(item => item.Email)
+            </td>
+
+            <td>
+                <img style="height: 98px;" src="~/@Html.DisplayFor(item => item.Image)">
+            </td>
+            <td>
+                @Html.DisplayFor(item => item.Designation)
+            </td>
+            <td>
+                @Html.DisplayFor(item => item.Degree)
+            </td>
+            <td>
+                @Html.DisplayFor(item => item.Fees)
+            </td>
+            <td>
+                @Html.DisplayFor(item => item.Schedule)
+            </td>
+
+        </tr>
+        </tbody>
+
+
+    </table>
+    <center>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-danger" /> |
+                @Html.ActionLink("Back to List", "Index",null,new{@class="btn btn-primary"})
+            </div>
+        }
+    </center>
+</div>
+@section scripts{
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+        var table = $('#datatable').DataTable();
+    });
+</script>
+}

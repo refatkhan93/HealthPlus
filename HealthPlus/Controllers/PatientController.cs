@@ -28,6 +28,7 @@ namespace HealthPlus.Controllers
             appointment.PatientId = Convert.ToInt32(Session["PatientId"]);
             appointment.Approval = 0;
             appointment.SerialNo = 0;
+            appointment.Note = baseControl.Encrypt(appointment.Note);
             // appointment.Date= appointment.Date.ToString("dd/MM/yyyy");
             using (var ctx = new HospitalContext())
             {
@@ -39,8 +40,8 @@ namespace HealthPlus.Controllers
         }
         public ActionResult Profile(string message)
         {
-            
-            ViewBag.Profile = "active";
+
+            ViewBag.PatientProfile = "active";
             ViewBag.UpdateMessage = message;
             int pid = (int) Session["PatientId"];
             
@@ -63,8 +64,8 @@ namespace HealthPlus.Controllers
                 foreach (var d in data)
                 {
                     DoctorAppointmentView dc = new DoctorAppointmentView();
-                    dc.Name = d.aName;
-                    dc.Designation = d.aDesignation;
+                    dc.Name = baseControl.Decrypt(d.aName);
+                    dc.Designation = baseControl.Decrypt(d.aDesignation);
                     dc.Approval = d.aApproval;
                     dc.Date = d.aDate;
                     dc.Prescription = d.aPrescription;

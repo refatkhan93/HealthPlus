@@ -24,7 +24,7 @@
         display: inline;
         margin-left: 4em;
         
-        width: 18em;
+        /*width: 18em;*/
     }
     .bdr {
         border-right: 2px solid black;  
@@ -42,42 +42,39 @@
     </p>
 </div>
 <div class="row" style="margin-right: 0;">
-    <div class="col-md-6" style="
-    margin-top: 12px;
-">
+    <div class="col-md-6" style="margin-top: 12px;">
         <table class="ttbl">
             <tbody style="text-align: left;">
                 <tr>
                     <th>Patient's Name</th>
-                    <td>: abcd</td>
+                    <td>: @Model.PatientName</td>
                 </tr>
                 <tr>
                     <th>Age</th>
-                    <td>: 42</td>
+                    <td>: @Model.PatientAge</td>
                 </tr>
                
                 <tr>
                     <th>Phone No</th>
-                    <td>: 01458487845</td>
+                    <td>: @Model.PatientPhone</td>
                 </tr>
 
             </tbody>
         </table>
-        <table class="ttbl">
+        <table class="ttbl" style="float: right; margin-right: 4em;">
             <tbody style="text-align: left;">
                 <tr>
                     <th>Doctor's Name</th>
-                    <td>: abcd</td>
+                    <td>: @Model.DoctorName</td>
                 </tr>
                 <tr>
                     <th>Designation</th>
-                    <td>: 42</td>
+                    <td>: @Model.DoctorDesignation</td>
                 </tr>
                 <tr>
-                    <th>Phone No</th>
-                    <td>: 01458487845</td>
+                    <th>Qualifications</th>
+                    <td>: @Model.DoctorDegree</td>
                 </tr>
-
             </tbody>
         </table>
     </div>
@@ -106,9 +103,9 @@
             </td>
         </tr>
     </table>
-    <div class="row" style="margin-top: 8px;">
+    <div class="row" style="margin-top: 5em; float: right;">
 
-        <p>..................................... <br/> Date: @DateTime.Now.ToString("dd/MM/yyyy")</p>
+        <p style="margin-right: 10em;">..................................... <br/> Date: @DateTime.Now.ToString("dd/MM/yyyy")</p>
     </div>
 
 </div>

@@ -11,17 +11,20 @@
     {
         isLogin = "1";
     }
-  
+
 }
+@section design{
 <link href="~/Content/bootstrap-datepicker.min.css" rel="stylesheet" />
 <style>
     .container {
         padding: 35px;
         background-color: #f0ffffa3;
-    } 
+    }
+
     .ft-sz {
         font-size: 17px;
     }
+
     .ft-ss {
         font-size: 13px;
     }
@@ -38,6 +41,8 @@
         margin-bottom: 37px;
     }
 </style>
+    }
+
 <div class="">
     <div class="himg">
         <img style="width: 100%; height: 28em;" src="~/Photos/treatment.jpg"/>
@@ -193,7 +198,7 @@
             </div>
             
             <div class="form-group row">
-                <label for="name" class="col-sm-2 col-form-label">Select Session</label>
+                <label for="name" class="col-sm-2 col-form-label">Patient's Problem</label>
                 <div class="col-sm-6">
                     <textarea name="Note" placeholder="Enter Your Note About Patient" style="width: 24em; height: 108px; margin-top: 0px; margin-bottom: 0px;"></textarea>
                 </div>
@@ -241,13 +246,14 @@
                 var k = $('#Did').text();
                 var kl = $('#Dsc').text();
                 var newdate = dateindex;
-                for (var i = 0; i < kl.length; i++) {
+                var i;
+                for (i = 0; i < kl.length; i++) {
                     if (kl[i] !== ',') {
                         console.log(parseInt(kl[i]));
                         removeElement(newdate, parseInt(kl[i]));
                     }
                 }
-                for (var i = 0; i < newdate.length-1; i++) {
+                for (i = 0; i < newdate.length-1; i++) {
                     datelimit = datelimit + newdate[i].toString()+",";
                 }
                 datelimit = datelimit + newdate[i].toString();
@@ -256,6 +262,7 @@
                 var asiaTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" });
                 var date = new Date(asiaTime);
                 date.setDate(date.getDate());
+                console.log(datelimit);
                 $("#datetime").datepicker("destroy");
                 $('#datetime').datepicker({
                     startDate: date,
@@ -282,15 +289,19 @@
             $('.link').on('click', function () {
                 var k = $('#Did').text();
                 var kl = $('#Dsc').text();
+                console.log(kl);
                 var newdate = dateindex;
-                for (var i = 0; i < kl.length; i++) {
+                var i;
+                for (i = 0; i < kl.length; i++) {
                     if (kl[i] !== ',') {
                         console.log(parseInt(kl[i]));
                         removeElement(newdate, parseInt(kl[i]));
                     }
                 }
-                for (var i = 0; i < newdate.length-1; i++) {
-                    datelimit = datelimit + newdate[i].toString()+",";
+                
+                for (i = 0; i < newdate.length-1; i++) {
+                    datelimit = datelimit + newdate[i].toString() + ",";
+                    console.log(parseInt(kl[i]));
                 }
                 datelimit = datelimit + newdate[i].toString() ;
                 datelimit=datelimit+"\"";
@@ -298,6 +309,8 @@
                 var date = new Date(asiaTime);
                 date.setDate(date.getDate());
                 $("#datetime").datepicker("destroy");
+                console.log(date);
+                console.log(datelimit);
                 $('#datetime').datepicker({
                     startDate: date,
                     endDate: '+10d',

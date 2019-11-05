@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
@@ -17,6 +18,7 @@ namespace HealthPlus.Controllers
         // GET: /Authentication/
         public ActionResult Login()
         {
+            ViewBag.Login = "active";
             if (Session["ReceptionistId"] == null && Session["PatientId"] == null &&
                 Session["DoctorId"] == null && Session["NurseId"] == null)
             {
@@ -61,7 +63,7 @@ namespace HealthPlus.Controllers
                         foreach (var k in q)
                         {
                             Session["DoctorId"] = k.Id;
-                            Session["DoctorName"] = k.Name;
+                            Session["DoctorName"] = baseControl.Decrypt(k.Name);
 
                         }
                         return RedirectToAction("PrescribePatient", "Doctor");
@@ -98,6 +100,7 @@ namespace HealthPlus.Controllers
         }
         public ActionResult Register()
         {
+            ViewBag.Register = "active";
             if (Session["ReceptionistId"] == null && Session["PatientId"] == null &&
                 Session["DoctorId"] == null && Session["NurseId"] == null)
             {
@@ -152,6 +155,48 @@ namespace HealthPlus.Controllers
             Session["DoctorId"] = null;
             Session["DoctorName"] = null;
             return RedirectToAction("Index", "Primary");
+        }
+
+        public ActionResult AdminLogin()
+        {
+            if (Session["AdminId"] == null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "DoctorAdmin");
+            }
+            
+        }
+        [HttpPost]
+        public ActionResult AdminLogin(Login login)
+        {
+            string Password = baseControl.EncodePasswordMd5(login.Password);
+            string Email = baseControl.Encrypt(login.UserEmail);
+
+            using (var ctx = new HospitalContext())
+            {
+                var q=ctx.SystemAdmin.Where(c => c.Email == Email && c.Password == Password)
+                    .Select(c => new {c.Id})
+                    .FirstOrDefault();
+                if (q != null)
+                {
+                    Session["AdminId"] = q.Id;
+                }
+                else
+                {
+                    ViewBag.Error = "Login Failed";
+                    return View();
+                }
+            }
+
+            return RedirectToAction("Index","DoctorAdmin");
+        }
+        public ActionResult AdminLogout()
+        {
+            Session["AdminId"] = null;
+            return RedirectToAction("AdminLogin", "Authentication");
         }
 	}
 }
