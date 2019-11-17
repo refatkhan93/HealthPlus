@@ -82,9 +82,8 @@
             <td>Patient's Name</td>
             <td>Age</td>
             <td>Note</td>
-            @*<td>Report</td>*@
-
             <td>Call</td>
+            <td>History</td>
 
         </tr>
         </thead>
@@ -110,10 +109,7 @@
                     <th>Note : </th>
                     <td id="phistory"></td>
                 </tr>
-               @* <tr>
-                    <th>Report : </th>
-                    <td id="preport"></td>
-                </tr>*@
+
                 <tr>
                     <td>
 
@@ -123,28 +119,66 @@
                     <td><button style="width: 7em;" class="btn btn-success" id="next"><i class=" fa fa-arrow-right"></i><br/>Next</button></td>
 
                 </tr>
+                @* <tr>
+            <th>Report : </th>
+            <td id="preport"></td>
+        </tr>*@
             </table>
         </div>
-        <div class="col-md-9">
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <form method="POST">
                 <div id="pid">
                 </div>
+                <table>
+                    <tr>
+                        <td><label for="Chat" class="col-sm-2 col-form-label"><b>Discussion</b></label></td>
+                        <td><label for="Prescript" class="col-sm-2 col-form-label"><b>Prescription</b></label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <textarea style="height: 325px;width: 31em;" class="form-control" id="Chat" name="Chat" placeholder="Write your Discussion"></textarea>
+                        </td>
+                        <td>  <textarea style="height: 20em;" class="form-control" id="Prescript" name="Prescript" placeholder="Write your prescription"></textarea>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <select class="form-control" style="margin: 25px 0;" name="WardId">
+                                <option value="0">Select Ward to Admit</option>
+                                @foreach (Ward ward in Model)
+                                {
+                                    <option value="@ward.Id">@ward.Name</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                   
+                        <td><button style="width: 100%;" type="submit" class="btn btn-success">Print Prescription</button>
+</td>
+                    </tr>
+                </table>
                 <div class="form-group row">
                     <div class="col-sm-1"></div>
-                    <label for="Prescript" class="col-sm-2 col-form-label"><b>Prescription</b></label>
+                    
 
                     <div class="col-sm-9">
+                        
+                        </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-1"></div>
+                    
 
-                        <textarea style="height: 20em;" class="form-control" id="Prescript" name="Prescript" placeholder="Write your prescription"></textarea>
-                        <select class="form-control" style="margin: 25px 0;"name="WardId">
-                            <option value="0">Select Ward to Admit</option>
-                            @foreach (Ward ward in Model)
-                            {
-                                <option value="@ward.Id">@ward.Name</option>
-                            }
-                        </select>
-                        <button style="width: 100%;" type="submit" class="btn btn-success">Print Prescription</button>
-                    </div>
+                    <div class="col-sm-9">
+                       
+                       
+                        </div>
                 </div>
             </form>
         </div>
@@ -159,12 +193,16 @@
     <script src="~/Scripts/summernote/summernote.js"></script>
     <script src="~/Scripts/summernote-list-styles-bs4.js"></script>
     <script type="text/javascript">
+        function newhist(id) {
+            console.log(id);
+            window.open('Showhistory/'+id, '_blank');
+        }
 
         $(document).ready(function() {
             var table = $('#datatable').DataTable();
-           
 
-            $('#session').on('change', function () {
+          
+            $('#session').on('change', function() {
                 var Id = $('#session').val();
 
                 table.clear().draw();
@@ -176,28 +214,29 @@
                     url: '@Url.Action("GetPatient", "Doctor")',
                     contentType: 'application/json',
                     data: JSON.stringify(json),
-                    success: function (response) {
-                        
-                        $.each(response, function (key, value) {
+                    success: function(response) {
+
+                        $.each(response, function(key, value) {
                             console.log(value);
                             var ca = "callbtn" + serialNo;
-                           var kv= "<button id= "+ca+"\" style=\"width: 100%;\" class=\"btn btn-success ttb\">Call</button>"+
-                     "<div style=\"height: 0; width: 0; visibility: hidden;\" id=\"AppointmentId\">" + value.AppointmentId + "</div>";
+                            var caa = "histbtn" + serialNo;
+                            var kv = "<button id= " + ca + "\" style=\"width: 100%;\" class=\"btn btn-success ttb\">Call</button>" +
+                                "<div style=\"height: 0; width: 0; visibility: hidden;\" id=\"AppointmentId\">" + value.AppointmentId + "</div>";
+
+                            var hs = "<button  id= " + caa + "\" onclick=\"newhist("+value.AppointmentId+")\" style=\"width: 100%;\"  class=\"btn btn-success ttl\">History</button>";
                             table.row.add([
-                               serialNo,
-                               value.Name,
-                               value.Age,
-                               value.Note,
-                               kv
-                              
+                                serialNo,
+                                value.Name,
+                                value.Age,
+                                value.Note,
+                                kv,
+                                hs
                             ]).draw(false);
-                            serialNo+=1;
+                            serialNo += 1;
                         });
                     }
                 });
             });
-
-
 
 
             $('#Prescript').summernote({
@@ -206,11 +245,9 @@
 
 
             });
-
            
 
-
-            $(document).on('click','.ttb', function() {
+            $(document).on('click', '.ttb', function() {
                 $('#prescription').code('');
                 $('#pserial').empty();
                 $('#pname').empty();
@@ -224,14 +261,14 @@
                     $name = $row.find("td:nth-child(2)").text(),
                     $age = $row.find("td:nth-child(3)").text(),
                     $history = $row.find("td:nth-child(4)").text();
-                   /* $report = $row.find("td:nth-child(5)").text();*/
+                /* $report = $row.find("td:nth-child(5)").text();*/
                 var idd = $.trim($row.find("td:nth-child(5)").text().substr(4));
                 console.log(idd);
                 $('#pserial').append($t);
                 $('#pname').append($name);
                 $('#page').append($age);
                 $('#phistory').append($history);
-               /* $('#preport').append($report);*/
+                /* $('#preport').append($report);*/
                 $('#pid').append('<input type="hidden" name="AppointmentId" value="' + idd + '">');
 
 
@@ -273,87 +310,86 @@
                         }
                     }
                 }
-                
-                
-            
-            console.log(txt);
-            if (!table.cell(kn, 0).data())
-                $t = 'Finished';
-
-            $('#pserial').append($t);
-
-            $('#pserial').empty();
-            $('#pserial').append($t);
-            $('#pname').append($name);
-            $('#page').append($age);
-            $('#phistory').append($history);
-           /* $('#preport').append($report);*/
-            $('#pid').append('<input type="hidden" name="AppointmentId" value="' + txt + '">');
 
 
-            return false;
-        });
+                console.log(txt);
+                if (!table.cell(kn, 0).data())
+                    $t = 'Finished';
 
-        $(document).on('click', '#previous', function() {
+                $('#pserial').append($t);
 
-            $('#prescription').code('');
+                $('#pserial').empty();
+                $('#pserial').append($t);
+                $('#pname').append($name);
+                $('#page').append($age);
+                $('#phistory').append($history);
+                /* $('#preport').append($report);*/
+                $('#pid').append('<input type="hidden" name="AppointmentId" value="' + txt + '">');
 
-            $('#pname').empty();
-            $('#page').empty();
-            $('#phistory').empty();
-          /*  $('#preport').empty();*/
-            $('#pid').empty();
 
-            var knn = document.getElementById('pserial').innerHTML;
+                return false;
+            });
 
-            if (knn === 'Finished')
-                knn = table.rows().count() + 1;
-            else if (knn === 'No more patient')
-                knn = 0;
+            $(document).on('click', '#previous', function() {
 
-            var kn = parseInt(knn);
-            kn = kn - 2;
-            var txt = "";
+                $('#prescription').code('');
 
-            var t = table.cell(kn, 0).data();
-            var name = table.cell(kn, 1).data();
-            var age = table.cell(kn, 2).data();
-            var history = table.cell(kn, 3).data();
-           /* var report = table.cell(kn, 4).data();*/
-            var idd = table.cell(kn, 4).data();
+                $('#pname').empty();
+                $('#page').empty();
+                $('#phistory').empty();
+                /*  $('#preport').empty();*/
+                $('#pid').empty();
 
-            if (idd != null) {
-                var len = idd.length;
+                var knn = document.getElementById('pserial').innerHTML;
 
-                for (var i = len - 11; i < len; i++) {
-                    if (idd[i] === '>') {
-                        while (idd[i + 1] !== '<') {
-                            txt = txt + idd[i + 1];
-                            i = i + 1;
+                if (knn === 'Finished')
+                    knn = table.rows().count() + 1;
+                else if (knn === 'No more patient')
+                    knn = 0;
+
+                var kn = parseInt(knn);
+                kn = kn - 2;
+                var txt = "";
+
+                var t = table.cell(kn, 0).data();
+                var name = table.cell(kn, 1).data();
+                var age = table.cell(kn, 2).data();
+                var history = table.cell(kn, 3).data();
+                /* var report = table.cell(kn, 4).data();*/
+                var idd = table.cell(kn, 4).data();
+
+                if (idd != null) {
+                    var len = idd.length;
+
+                    for (var i = len - 11; i < len; i++) {
+                        if (idd[i] === '>') {
+                            while (idd[i + 1] !== '<') {
+                                txt = txt + idd[i + 1];
+                                i = i + 1;
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
-            }
-            console.log(idd);
-            console.log(txt);
-            if (kn < 0)
-                t = 'No more patient';
+                console.log(idd);
+                console.log(txt);
+                if (kn < 0)
+                    t = 'No more patient';
 
-            $('#pserial').append(t);
+                $('#pserial').append(t);
 
-            $('#pserial').empty();
-            $('#pserial').append(t);
-            $('#pname').append(name);
-            $('#page').append(age);
-            $('#phistory').append(history);
-           /* $('#preport').append(report);*/
-            $('#pid').append('<input type="hidden" name="AppointmentId" value="'+txt+'">');
+                $('#pserial').empty();
+                $('#pserial').append(t);
+                $('#pname').append(name);
+                $('#page').append(age);
+                $('#phistory').append(history);
+                /* $('#preport').append(report);*/
+                $('#pid').append('<input type="hidden" name="AppointmentId" value="' + txt + '">');
 
 
-            return false;
+                return false;
+            });
         });
-    });
     </script>
-    
+
 }

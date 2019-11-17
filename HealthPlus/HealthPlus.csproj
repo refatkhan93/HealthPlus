@@ -717,6 +717,7 @@
     <Content Include="Views\Authentication\AdminLogin.cshtml" />
     <Content Include="Views\Admin\PatientAdmitWard.cshtml" />
     <Content Include="Views\Admin\AssignNurse.cshtml" />
+    <Content Include="Views\Doctor\Showhistory.cshtml" />
     <None Include="Views\Primary\Index.cshtml" />
     <Content Include="Views\Doctor\MakePdf.cshtml" />
     <Content Include="Views\Authentication\Login.cshtml" />

@@ -21,7 +21,8 @@ namespace HealthPlus.Models
         public int WardId { get; set; }
         [AllowHtml]
         public string Prescript { get; set; }
-
+        [AllowHtml]
+        public string Chat { get; set; }
         
 
     }

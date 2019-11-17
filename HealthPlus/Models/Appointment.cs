@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace HealthPlus.Models
 {
@@ -15,6 +16,9 @@ namespace HealthPlus.Models
         public int SerialNo { get; set; }
         public string Date { get; set; }
         public int Session { get; set; }
+
+
+        public string Chat { get; set; }
         public string Prescription { get; set; }
         public int WardId { get; set; }
 

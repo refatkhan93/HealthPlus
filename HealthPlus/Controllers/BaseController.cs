@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Security;
+using Microsoft.Ajax.Utilities;
 
 namespace HealthPlus.Controllers
 {
@@ -69,6 +70,8 @@ namespace HealthPlus.Controllers
         }
         public string Decrypt(string input)
         {
+            if (input == String.Empty || input==null)
+                return "";
 
             byte[] bytesToBeDecrypted = Convert.FromBase64String(input);
             byte[] passwordBytes = Encoding.UTF8.GetBytes(password);

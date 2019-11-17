@@ -2,116 +2,119 @@
 @{
     ViewBag.Title = "Report";
 }
-<div id="printableArea" style="width:400px; height:400px;">
+<div id="printableArea" style="width: 400px; height: 400px;">
+    <select name="month" id="month">
+        <option value="">Select a Month</option>
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+    </select>
     cell: <canvas id="myChart"></canvas>
 </div>
-<button id="printChart" onclick="printDiv('myChart')">Print only the above div</button>
-
 @section scripts{
     <script src="~/Scripts/Chart.min.js"></script>
     <script>
-        var myChart;
         $(document).ready(function() {
-
-
+            var d = new Date();
+            var year = d.getFullYear();
             var ctx = document.getElementById('myChart');
-            var dt = [12, 19, 3, 5, 2, 3];
-            myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                    datasets: [
-                        {
-                            label: '# of Votes',
-                            data: dt,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'
-                            ],
-                            borderWidth: 1
-                        }, {
-                            label: '# of Votes',
-                            data: [12, 19, 3, 5, 2, 3],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'
-                            ],
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    scales: {
-                        yAxes: [
-                            {
-                                barPercentage: 0.5,
-                                barThickness: 6,
-                                maxBarThickness: 8,
-                                minBarLength: 2,
-                                gridLines: {
-                                    offsetGridLines: true
-                                },
-                                ticks: {
-                                    beginAtZero: true
-                                },
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'probability'
-                                }
-                            }
-                        ],
-                        xAxes: [
-                            {
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'probability'
-                                }
-                            }
-                        ]
-                    },
-                    title: {
-                        display: true,
-                        text: 'Custom Chart Title'
+
+
+
+            $('#searchbtn').on('click', function() {
+                var month = $('#month').val();
+                var kk = parseInt(month);
+                str = "[";
+                if (kk === 1 || kk === 3 || kk === 5 || kk === 7 || kk === 8 || kk === 10 || kk === 12) {
+                    for (var i=1;i<=30;i++) {
+                        str = str + "\"" + i + "/" + kk + "/" + year + "\",";
                     }
+                    str = str + "\"31"+ kk + "/" + year + "\"]";
                 }
+                else if (kk === 2) {
+                    for (var i = 1; i < 30; i++) {
+                        str = str + "\"" + i + "/" + kk + "/" + year + "\",";
+                    }
+                    str = str + "\"31" + kk + "/" + year + "\"]";
+                } else {
+                    for (var i = 1; i <= 27; i++) {
+                        str = str + "\"" + i + "/" + kk + "/" + year + "\",";
+                    }
+                    str = str + "\"31" + kk + "/" + year + "\"]";
+                }
+                var json = { param: month };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetAppointmentConfirmationChart", "Receptionist")',
+                    contentType: 'application/json',
+                    data: JSON.stringify(json),
+                    success: function (response) {
+
+                        new Chart(document.getElementById("myChart"), {
+                            type: 'bar',
+                            data: {
+                                labels: str,
+                                datasets: [{
+                                    label: "Approved",
+                                    type: "line",
+                                    borderColor: "#8e5ea2",
+                                    data: response.Approve,
+                                    fill: false
+                                }, {
+                                    label: "Rejected",
+                                    type: "line",
+                                    borderColor: "#3e95cd",
+                                    data: response.Reject,
+                                    fill: false
+                                },
+                                {
+                                    label: "Approved",
+                                    type: "bar",
+                                    backgroundColor: "rgba(0,0,0,0.2)",
+                                    data: response.Approve,
+
+                                }, {
+                                    label: "Rejected",
+                                    type: "bar",
+                                    backgroundColor: "rgba(0,0,0,0.2)",
+                                    backgroundColorHover: "#3e95cd",
+                                    data: response.Reject
+                                }
+                                ]
+                            },
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Population growth (millions): Europe & Africa'
+                                },
+                                legend: { display: false }
+                            }
+                        });
+                       
+                    }
+
+                });
+                return false;
             });
+
+
+
+
+
+
+
+
+
         });
-        function printDiv(divName) {
-            
-            $(document).not("#myChart").hide();
-              /*  var printContents = myChart;
-                var originalContents = document.body.innerHTML;*/
-            window.print();
-               /* document.body.innerHTML = printContents;
 
-               
-
-                document.body.innerHTML = originalContents;*/
-            }
-      
     </script>
 }

@@ -67,13 +67,16 @@ namespace HealthPlus.Controllers
             name = DateTime.Now.ToString("dd-MM-yyyy") + "_" + prescription.PatientId + "_" + Guid.NewGuid() + ".pdf";
             using (var ctx = new HospitalContext())
             {
+                Appointment apt = ctx.Appointment.Find(AppointmentId);
+                apt.Chat = baseControl.Encrypt(prescription.Chat);
+               
                 if (prescription.WardId > 0)
                 {
-                    Appointment appointment = ctx.Appointment.Find(AppointmentId);
-                    appointment.WardId = prescription.WardId;
-                    ctx.SaveChanges();
+                   
+                    apt.WardId = prescription.WardId;
+                    
                 }
-                
+                ctx.SaveChanges();
                 var kl = from a in ctx.Appointment
                     join p in ctx.Patient
                         on a.PatientId equals p.Id
@@ -118,6 +121,25 @@ namespace HealthPlus.Controllers
         public ActionResult MakePdf(Prescription idPrescription)
         {
             return View(idPrescription);
+        
+        }
+
+        public ActionResult Showhistory(int id)
+        {
+            List<Appointment>al=new List<Appointment>();
+            using (var ctx=new HospitalContext())
+            {
+                int k = ctx.Appointment.Where(c => c.Id == id).Select(c => c.PatientId).FirstOrDefault();
+                var dt=ctx.Appointment.Where(c => c.PatientId == k).Select(c => new {c.Chat, c.Prescription});
+                foreach (var d in dt)
+                {
+                    Appointment ap=new Appointment();
+                    ap.Prescription = d.Prescription;
+                    ap.Chat = baseControl.Decrypt(d.Chat);
+                    al.Add(ap);
+                }
+            }
+            return View(al);
         }
 	}
 }
