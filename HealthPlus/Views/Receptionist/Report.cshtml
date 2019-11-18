@@ -2,23 +2,50 @@
 @{
     ViewBag.Title = "Report";
 }
-<div id="printableArea" style="width: 400px; height: 400px;">
-    <select name="month" id="month">
-        <option value="">Select a Month</option>
-        <option value="1">January</option>
-        <option value="2">February</option>
-        <option value="3">March</option>
-        <option value="4">April</option>
-        <option value="5">May</option>
-        <option value="6">June</option>
-        <option value="7">July</option>
-        <option value="8">August</option>
-        <option value="9">September</option>
-        <option value="10">October</option>
-        <option value="11">November</option>
-        <option value="12">December</option>
-    </select>
-    cell: <canvas id="myChart"></canvas>
+<style>
+    .graph {
+        height: 20em;
+        width: 20em;
+    }
+</style>
+<div class="x-box-2">
+
+    <center>
+        <div style="margin-bottom: 35px;">
+            <h5>Approved and Rejected Patients' List By Month</h5>
+            <table>
+
+                <tr>
+                    <td >
+                        <lable for="month" style="margin-right: 5px;">Select Month</lable>
+                    </td>
+                    <td>
+                        <select name="month" id="month" class="form-control">
+                            <option value="">Select a Month</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <canvas id="myChart" style="height: 50em; width: 50em;"></canvas>
+            </div>
+        </div>
+    </center>
+
 </div>
 @section scripts{
     <script src="~/Scripts/Chart.min.js"></script>
@@ -26,31 +53,34 @@
         $(document).ready(function() {
             var d = new Date();
             var year = d.getFullYear();
-            var ctx = document.getElementById('myChart');
+            var ctx = document.getElementById('myChart').getContext("2d");;
 
+            ctx.canvas.width = 800;
+            ctx.canvas.height = 400;
+            var myChart;
 
-
-            $('#searchbtn').on('click', function() {
+            $('#month').on('change', function() {
                 var month = $('#month').val();
                 var kk = parseInt(month);
-                str = "[";
+                var str=new Array(month);
                 if (kk === 1 || kk === 3 || kk === 5 || kk === 7 || kk === 8 || kk === 10 || kk === 12) {
                     for (var i=1;i<=30;i++) {
-                        str = str + "\"" + i + "/" + kk + "/" + year + "\",";
+                        str[i-1] =i + "/" + kk + "/" + year ;
                     }
-                    str = str + "\"31"+ kk + "/" + year + "\"]";
+                    str[30] = "31/"+ kk + "/" + year;
                 }
                 else if (kk === 2) {
-                    for (var i = 1; i < 30; i++) {
-                        str = str + "\"" + i + "/" + kk + "/" + year + "\",";
+                    for (var i = 1; i < 28; i++) {
+                        str[i-1] =   i + "/" + kk + "/" + year ;
                     }
-                    str = str + "\"31" + kk + "/" + year + "\"]";
+                    str [27]= "28/" + kk + "/" + year;
                 } else {
-                    for (var i = 1; i <= 27; i++) {
-                        str = str + "\"" + i + "/" + kk + "/" + year + "\",";
+                    for (var i = 1; i <= 29; i++) {
+                        str[i-1]= i + "/" + kk + "/" + year ;
                     }
-                    str = str + "\"31" + kk + "/" + year + "\"]";
+                    str[29] ="30/" + kk + "/" + year ;
                 }
+                console.log(str);
                 var json = { param: month };
                 $.ajax({
                     type: "POST",
@@ -58,51 +88,54 @@
                     contentType: 'application/json',
                     data: JSON.stringify(json),
                     success: function (response) {
-
-                        new Chart(document.getElementById("myChart"), {
+                        console.log(response.App);
+                       myChart = new Chart(ctx, {
                             type: 'bar',
+                            height: 400,
+                            width:800,
                             data: {
                                 labels: str,
                                 datasets: [{
                                     label: "Approved",
                                     type: "line",
                                     borderColor: "#8e5ea2",
-                                    data: response.Approve,
+                                    data: response.App,
                                     fill: false
                                 }, {
                                     label: "Rejected",
                                     type: "line",
                                     borderColor: "#3e95cd",
-                                    data: response.Reject,
+                                    data: response.Rej,
                                     fill: false
                                 },
                                 {
                                     label: "Approved",
                                     type: "bar",
-                                    backgroundColor: "rgba(0,0,0,0.2)",
-                                    data: response.Approve,
-
+                                    backgroundColor: "#987bce",
+                                    data: response.App,
                                 }, {
                                     label: "Rejected",
                                     type: "bar",
-                                    backgroundColor: "rgba(0,0,0,0.2)",
+                                    backgroundColor: "#2580e2",
                                     backgroundColorHover: "#3e95cd",
-                                    data: response.Reject
+                                    data: response.Rej
                                 }
                                 ]
                             },
                             options: {
+                                
                                 title: {
                                     display: true,
-                                    text: 'Population growth (millions): Europe & Africa'
+                                    text: 'Approved and Rejected Patient Appointments'
                                 },
-                                legend: { display: false }
+                                legend: { display: true }
                             }
                         });
-                       
+                        
                     }
-
+                   
                 });
+                
                 return false;
             });
 

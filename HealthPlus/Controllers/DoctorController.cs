@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -121,25 +122,59 @@ namespace HealthPlus.Controllers
         public ActionResult MakePdf(Prescription idPrescription)
         {
             return View(idPrescription);
-        
         }
 
         public ActionResult Showhistory(int id)
         {
             List<Appointment>al=new List<Appointment>();
+
             using (var ctx=new HospitalContext())
             {
                 int k = ctx.Appointment.Where(c => c.Id == id).Select(c => c.PatientId).FirstOrDefault();
-                var dt=ctx.Appointment.Where(c => c.PatientId == k).Select(c => new {c.Chat, c.Prescription});
+                var dt=ctx.Appointment.Where(c => c.PatientId == k && c.Approval==3).Select(c => new {c.Chat, c.Prescription,c.Date});
                 foreach (var d in dt)
                 {
                     Appointment ap=new Appointment();
                     ap.Prescription = d.Prescription;
                     ap.Chat = baseControl.Decrypt(d.Chat);
+                    ap.Date = d.Date;
+
                     al.Add(ap);
                 }
+                ViewBag.PatientId = k;
             }
             return View(al);
+        }
+
+        public JsonResult GetFilteredHistory(string datet,int Patient)
+        {
+            List<Appointment> al = new List<Appointment>();
+            var ctx = new HospitalContext();
+            SqlConnection connection = new SqlConnection(ctx.Database.Connection.ConnectionString);
+            string query1 = "SELECT Chat,Prescription,Date " +
+                            "FROM Appointments as a " +
+                            "WHERE a.Date>='" + datet + "' AND a.PatientId<='" + Patient + "' AND a.Approval=3 ";
+                           
+            
+            SqlCommand command = new SqlCommand(query1, connection);
+           
+            connection.Open();
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Appointment ap = new Appointment();
+                ap.Prescription = reader["Prescription"].ToString();
+                ap.Chat = baseControl.Decrypt(reader["Chat"].ToString());
+                ap.Date = reader["Date"].ToString();
+
+                al.Add(ap);
+                
+            }
+
+            reader.Close();
+            ViewBag.PatientId = Patient;
+            return Json(al);
         }
 	}
 }

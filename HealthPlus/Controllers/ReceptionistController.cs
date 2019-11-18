@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -205,6 +206,76 @@ namespace HealthPlus.Controllers
 
             }
 
+        }
+
+        public JsonResult GetAppointmentConfirmationChart(int param)
+        {
+
+            int kk;
+            if (param == 1 || param == 3 || param == 5 || param == 7 || param == 8 || param == 10 || param == 12)
+            {
+                kk = 31;
+            }
+            else if (param==2)
+            {
+                kk = 28;
+            }
+            else
+            {
+                kk = 30;
+            }
+            DateTime today=DateTime.Now;;
+            int[] ap = new int[33];
+            int[] rj = new int[33];
+            string Approve = "[";
+            string Reject = "[";
+            string start = today.Year + "-" + param + "-" + 1;
+            string end = today.Year + "-" + param + "-" + kk;
+            var ctx = new HospitalContext();
+            SqlConnection connection = new SqlConnection(ctx.Database.Connection.ConnectionString);
+            string query1 = "SELECT DAY(Date) as day,Count(Approval) as Ct "+
+                            "FROM AGraph as a "+
+                            "WHERE a.Date>='"+start+"' AND a.Date<='"+end+"' AND a.Approval=1 "+
+                            "GROUP BY Date";
+            string query2 = "SELECT DAY(Date) as day,Count(Approval) as Ct " +
+                            "FROM AGraph as a " +
+                            "WHERE a.Date>='" + start + "' AND a.Date<='" + end + "' AND a.Approval=2 " +
+                            "GROUP BY Date";
+            SqlCommand command = new SqlCommand(query1, connection);
+            SqlCommand command2 = new SqlCommand(query2, connection);
+            connection.Open();
+             SqlDataReader reader = command.ExecuteReader();
+           
+            while (reader.Read())
+            {
+                int k = Convert.ToInt32(reader["day"].ToString());
+                
+                ap[k]=Convert.ToInt32(reader["Ct"].ToString());
+            }
+            
+            reader.Close();
+            SqlDataReader reader2 = command2.ExecuteReader();
+            
+            while (reader2.Read())
+            {
+                int k = Convert.ToInt32(reader2["day"].ToString());
+
+                rj[k] = Convert.ToInt32(reader2["Ct"].ToString());
+            }
+            reader2.Close();
+            int i;
+            for (i = 1; i < kk; i++)
+            {
+                Approve = Approve + ap[i] + ",";
+            }
+            Approve = Approve + ap[i]+"]";
+            for (i = 1; i < kk; i++)
+            {
+                Reject = Reject + rj[i] + ",";
+            }
+            Reject = Reject + rj[i]+"]";
+            connection.Close();
+            return Json(new { App = ap, Rej =rj });
         }
         
 	}

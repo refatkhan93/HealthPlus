@@ -19,5 +19,6 @@ namespace HealthPlus.Context
         public DbSet<Nurse> Nurse { get; set; }
         public DbSet<Ward> Ward { get; set; }
         public DbSet<SystemAdmin> SystemAdmin { get; set; }
+        
     }
 }
