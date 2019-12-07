@@ -13,7 +13,12 @@
     @RenderSection("design", required: false)
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <style>
-
+        .dropdown-menu {
+            left: 57em;
+            padding: 9px;
+            color: black;
+        }
+        
         </style>
 </head>
 <body>
@@ -62,7 +67,8 @@
                 <a class="nav-item nav-link  @ViewBag.Appointment" href="@Url.Action("Appointment", "Primary")">Appointment</a>
                 <a class="nav-item nav-link @ViewBag.Emergency" href="@Url.Action("Emergency", "Primary")">Emergency</a>
                 <a class="nav-item nav-link @ViewBag.Contact" href="#">Contact</a>
-                <a class="nav-item nav-link  @ViewBag.PatientProfile" href="@Url.Action("Profile", "Patient")">Profile</a>
+                <a  id="Patient" class="nav-item nav-link  @ViewBag.PatientProfile" href="@Url.Action("Profile", "Patient")">Profile <sup><span id="pnof" style="display: none;" class="notif fa fa-bell"> @Session["PatientNotify"]</span></sup></a>
+                <ul id="PatientProfile" class="dropdown-menu"  style="display: none"></ul>
                 <a class="nav-item nav-link " href="@Url.Action("PatientLogout","Authentication")">Logout</a>
             </div>
         }
@@ -83,7 +89,7 @@
             <div class="navbar-nav">
                 <a class="nav-item nav-link @ViewBag.Index" href="@Url.Action("Index","Primary")">Home <span class="sr-only">(current)</span></a>
                 <a class="nav-item nav-link  @ViewBag.AppointmentSchedule" href="@Url.Action("AppointmentSchedule", "Receptionist")">Appointment Schedule</a>
-                <a class="nav-item nav-link @ViewBag.Emergency" href="@Url.Action("Emergency", "Primary")">Contact</a>
+                <a class="nav-item nav-link @ViewBag.MakeBill" href="@Url.Action("MakeBill", "Receptionist")">Make Bill</a>
                 <a class="nav-item nav-link  @ViewBag.Report" href="@Url.Action("Report", "Receptionist")">Report</a>
                 <a class="nav-item nav-link  @ViewBag.ReceptionistProfile" href="@Url.Action("ReceptionistProfile", "Receptionist")">Profile</a>
                 <a class="nav-item nav-link " href="@Url.Action("ReceptionistLogout","Authentication")">Logout</a>
@@ -149,7 +155,52 @@
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/bootstrap")
 @RenderSection("scripts", required: false)
+<script>
+  
+        var k = parseInt($('#pnof').html());
+        if (k > 0) {
+            $('#pnof').show();
+        }
+        $("#Patient").hover(function () {
+            var k;
+           
+            var clr;
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("HoverResult", "Patient")',
+                contentType: 'application/json',
+                
+                success: function (response) {
+                    console.log(response);
+                    if(response.length !== 0)
+                    $('#PatientProfile').show();
+                    $.each(response, function (key, value) {
+                        if (value.Approval === 1) {
+                            k = "Approved";
+                            clr = "Green";
+                        }
+                           
+                        else if (value.Approval === 2) {
+                            k = "Rejected";
+                            clr = "Red";
+                        }
+                           
 
+                        $('#PatientProfile').append("<li style=\"border-bottom: 1px solid black; margin-bottom:5px; color:"+clr+";\">Appointment to "+value.Name+" is "+k+"</li>");
+
+
+                    });
+                    
+                }
+            });
+        }, function () {
+                $('#PatientProfile').html("");
+                $('#PatientProfile').hide();
+            
+           
+        });
+  
+</script>
 
 </body>
 </html>

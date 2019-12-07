@@ -1,0 +1,376 @@
+﻿@using HealthPlus.Models
+@using Microsoft.Ajax.Utilities
+
+@{
+    Layout = null;
+    ViewBag.Title = "MakeBill";
+}
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/custom.css" rel="stylesheet"/>
+
+
+<style>
+    #hideit {
+        margin: 2em 6em 2em 6em;
+        border: 1px solid cadetblue;
+        padding: 20px;
+        box-shadow: 0px 0px 2px;
+        border-radius: 9px;
+    }
+    .gnt {
+        height: 47px;
+        margin: -13px;
+        width: 282px;
+        resize: none;
+        padding: 11px;
+        border: 1px solid #dee2e6;
+    }
+    .rr {
+        width: 1em;
+    }
+    .txtt {
+        text-align: right;
+        margin-top: 11px;
+    }
+    .tbox {
+        margin-left: 57px;
+        width: 280px;
+        height: 46px;
+        padding: 13px;
+        border: none;
+        background-color: white;
+        border-bottom: 1px solid cadetblue;
+    }
+</style>
+<center>
+    <div id="hideit">
+        <div class="">
+            <table>
+                <tr>
+                    <td>
+                        <label for="session">Select Session</label>
+                    </td>
+                    <td>
+                        <select id="session" name="session" class="form-control">
+                            <option value="">Select Session</option>
+                            <option value="1">Morning</option>
+                            <option value="2">Afternoon</option>
+                            <option value="3">Evening</option>
+
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="doctor">Select Doctor</label>
+                    </td>
+                    <td>
+                        <select id="doctor" name="doctor" disabled="disabled" class="form-control">
+                            <option value="">Select Doctor</option>
+                            @foreach (Doctor d in ViewBag.Doctors)
+                            {
+                                <option value="@d.Id">@d.Name</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label for="patient">Select Patient</label>
+                    </td>
+                    <td>
+                        <select id="patient" name="patient" disabled="disabled" class="form-control">
+                            <option value="">Select Patient</option>
+
+
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</center>
+<div id="print" class="x-box-2">
+    <center>
+        <h3>MEDICAL RECEIPT</h3>
+    </center>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            Data: @DateTime.Now.ToString("D")
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            <table id="t3">
+                <tr id="invoice">
+                    <td>Invoice No:</td>
+
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    <center style="margin: 18px 0 18px 0; ">
+        <h3>Patient & Medical Report</h3>
+
+    </center>
+
+
+
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <table id="t1">
+                <tr id="pn">
+                    <td>Patient's Name</td>
+
+                </tr>
+                <tr id="pa">
+                    <td>Age</td>
+
+                </tr>
+                <tr id="padd">
+                    <td>Address</td>
+
+                </tr>
+                <tr id="dn">
+                    <td>Consultant</td>
+
+                </tr>
+
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            <table id="t2">
+                <tr id="dp">
+                    <td>Consultant's Mail</td>
+
+                </tr>
+                <tr>
+                    <td>Bed No</td>
+                    <td> :</td>
+                </tr>
+                <tr>
+                    <td>Admission Date</td>
+                    <td> :</td>
+                </tr>
+                <tr>
+                    <td>Discharge Date</td>
+                    <td> :</td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+
+
+    <table id="costtable" class="table table-bordered" style="margin-top: 10px;">
+        <tr>
+            <th >Serial No</th>
+            <th >Service</th>
+            <th >Unit</th>
+            <th >Cost</th>
+        </tr>
+
+    </table>
+
+
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-2 txtt">
+            Total
+        </div>
+        <div class="col-md-2">
+            <input id="ttl" type="text" disabled="" class="tbox"/>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-2 txtt">
+            Discount
+        </div>
+        <div class="col-md-2">
+            <input id="dis" type="text" class="tbox"/>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-2 txtt">
+            Net Total
+        </div>
+        <div class="col-md-2">
+            <input id="ttt" type="text" disabled class="tbox"/>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+    <button id="ctb" class="btn btn-primary">Create Field</button><br/><br/>
+    <button style="width: 110px;" id="ptr" class="btn btn-success">Print</button>
+</div>
+
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script>
+    
+    var z = 1;
+   
+    $(document).ready(function () {
+
+        $('#ptr').on('click', function() {
+            var x = document.getElementById("hideit");
+            var y = document.getElementById("ctb");
+            var z = document.getElementById("ptr");
+
+            var p1 = document.getElementById("dis");
+            var p2 = document.getElementById("ttt");
+            var p3 = document.getElementById("ttl");
+
+            p1.style.width = "180px";
+            p2.style.width = "180px";
+            p3.style.width = "180px";
+
+            x.style.display = "none";
+            y.style.display = "none";
+            z.style.display = "none";
+            
+            //$("#print").printElement();
+            window.print();
+            p1.style.width = "280px";
+            p2.style.width = "280px";
+            p3.style.width = "280px";
+
+            x.style.display = "block";
+            y.style.display = "block";
+            z.style.display = "block";
+
+        });
+
+        $(document).on('blur', '#dis', function () {
+
+            var d = parseInt(document.getElementById("dis").value) || 0;
+            var t = parseInt(document.getElementById("ttl").value);
+            console.log(d);
+            
+            document.getElementById("ttt").value = t - d;
+
+        });
+
+        $(document).on('blur', '#top', function () {
+            var total = 0;
+            var rows = $("#costtable tr");
+            var fl = 0;
+            var tk = 2;
+            rows.children("td:nth-child(4)").each(function () {
+                if (fl === 0) {
+                    var v = $('#kvall').html();
+                    total += parseInt(v);
+                    fl = 1;
+                } else {
+                    total += parseInt($('#kval' + tk).val());
+                    tk += 1;
+                    console.log(total);
+                }
+                
+                
+            });
+            document.getElementById("ttl").value = total;
+            document.getElementById("ttt").value = total;
+        });
+        
+        
+        $('#ctb').on('click', function () {
+            z = z + 1;
+
+
+            $('#costtable').append("<tr>" +
+                "<td class=\"rr\">" + z + "</td>" +
+                "<td class=\"rr\"><textarea class=\"gnt\" type=\"text\"></textarea>" +
+                "<td class=\"rr\"><textarea class=\"gnt\" type=\"text\"></textarea>" +
+                "<td id=\"top\" name=\"ghm\" class=\"rr\"><textarea  id=\"kval"+z+"\" class=\"gnt\" type=\"text\"></textarea>" +
+                "</tr>");
+        });
+
+        $('#session').on('change', function() {
+            document.getElementById("doctor").disabled = false;
+        });
+        $('#doctor').on('change', function () {
+            document.getElementById("patient").disabled = false;
+            document.getElementById("patient").options.length = 1;
+            $('patient').append("<option value=\"\">Select Patient</option>");
+            var docId = $('#doctor').val();
+            var s = $('#session').val();
+            var json = { id: docId, session: s };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetVisitedPatient", "Receptionist")',
+                contentType: 'application/json',
+                data: JSON.stringify(json),
+                success: function(response) {
+
+                    $.each(response, function (key, value) {
+                        $('#patient').append("<option value=" + value.Id + ">" + value.Name + "</option>");
+                    });
+                }
+            });
+
+        });
+        $('#patient').on('change', function () {
+            var docId = $('#doctor').val();
+            var patId = $('#patient').val();
+            var s = $('#session').val();
+            var json = { docId: docId, session: s, PatId: patId };
+            var i;
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetInfo", "Receptionist")',
+                contentType: 'application/json',
+                data: JSON.stringify(json),
+                success: function (response) {
+
+                    
+                    var table = document.getElementById('t1');
+                    var rows = table.rows;
+                    if (rows[0].cells.length === 2) {
+                        for (i = 0; i < rows.length; i++) {
+                            rows[i].deleteCell(1);
+                        }
+                    }
+                   
+                    var table2 = document.getElementById('t2');
+                    var rows2 = table2.rows;
+                    if (rows2[0].cells.length === 2) {
+                    //for (i = 0; i < rows2.length; i++) {
+                        rows2[0].deleteCell(1);
+                    //}
+                    }
+                    var table3 = document.getElementById('t3');
+                    var rows3 = table3.rows;
+                    if (rows3[0].cells.length === 2) {
+                        //for (i = 0; i < rows2.length; i++) {
+                        rows3[0].deleteCell(1);
+                        //}
+                    }
+
+
+                    
+                    $('#pn').append("<td>: " + response.patient.Name + "</td>");
+                    $('#padd').append("<td>: " + response.patient.Address + "</td>");
+                    $('#pa').append("<td>: " + response.patient.Age + "</td>");
+                    $('#dn').append("<td>: " + response.doctor.Name + "</td>");
+                    $('#dp').append("<td>: " + response.doctor.Email + "</td>");
+                    $('#invoice').append("<td> #" + response.card + "</td>");
+                    $('#costtable').append("<tr><td class=\"rr\">1</td> <td class=\"rr\">Doctor Fees</td> <td class=\"rr\">1</td> <td id=\"kvall\" class=\"rr\">" + response.doctor.Fees + "</td></tr>");
+                    document.getElementById("ttl").value = response.doctor.Fees;
+
+                }
+            });
+
+        });
+
+    });
+</script>

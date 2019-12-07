@@ -42,12 +42,17 @@ namespace HealthPlus.Controllers
                     var q = ctx.Patient.Where(c => c.Email == login.UserEmail && c.Password == pass).Select(c => new { c.Id, c.Name }).ToList();
                     if (q.Any())
                     {
+                        int iid=0;
                         foreach (var k in q)
                         {
+                            iid = k.Id;
                             Session["PatientId"] = k.Id;
                             Session["PatientName"] = k.Name;
 
                         }
+                        int not=ctx.Appointment.Where(c => c.PatientId == iid && c.IsSeen == 2).Select(c => c.Id).ToList().Count;
+
+                        Session["PatientNotify"] = not;
                         return RedirectToAction("Index", "Primary");
                     }
                     else

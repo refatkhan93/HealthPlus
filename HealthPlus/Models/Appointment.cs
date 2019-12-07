@@ -16,7 +16,7 @@ namespace HealthPlus.Models
         public int SerialNo { get; set; }
         public string Date { get; set; }
         public int Session { get; set; }
-
+        public int IsSeen { get; set; }
 
         public string Chat { get; set; }
         public string Prescription { get; set; }

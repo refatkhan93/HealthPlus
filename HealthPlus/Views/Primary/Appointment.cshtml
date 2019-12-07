@@ -124,11 +124,11 @@
             }
             else
             {
-                <a class="link" href="">
-                <div>
-                    <img class="docimg" src="~/@doctor.Image"/>
+                <a href="" class="link" onclick='myFun("@doctor.Id","@doctor.Schedule")'>
+                    <div>
+                        <img class="docimg" src="~/@doctor.Image" />
 
-                </div>
+                    </div>
                     <div style="visibility: hidden; height: 0;" id="Did">@doctor.Id</div>
                     <div style="visibility: hidden; height: 0;" id="Dsc">@doctor.Schedule</div>
                     <div class="doctext">
@@ -138,7 +138,7 @@
                             </tr>
                             <tr class="ft-ss">
                                 <td>@doctor.Designation</td>
-                                
+
                             </tr>
                             <tr>
                                 <td>@doctor.Degree</td>
@@ -147,9 +147,9 @@
                                 <td>fees: @doctor.Fees </td>
                             </tr>
                         </table>
-                        
+
                     </div>
-            </a>
+                </a>
             }
            @* <a class="link" href="">
                 <div>
@@ -224,27 +224,24 @@
 @section scripts{
 <script src="~/Scripts/bootstrap-datepicker.min.js"></script>
     <script type="text/javascript">
-        
-        $(document).ready(function () {
-            setTimeout(function () {
-                $("#warningLabel").hide(1000).empty();
-            }, 5000);
-            function removeElement(array, elem) {
-                var index = array.indexOf(elem);
-                if (index > -1) {
-                    array.splice(index, 1);
-                }
+        var dateindex = [0,1,2,3,4,5,6];
+        var datelimit="\"";
+        function removeElement(array, elem) {
+            var index = array.indexOf(elem);
+            if (index > -1) {
+                array.splice(index, 1);
             }
+        }
 
-
-            var dateindex = [0,1,2,3,4,5,6];
-            var datelimit="\"";
-            
-
+        function myFun(k, kl) {
+            var dateindex = [0, 1, 2, 3, 4, 5, 6];
+            var datelimit = "\"";
+            console.log(k);
+            console.log(kl);
             $(document).on('click', '.link', function (e) {
                 $('#next').empty();
-                var k = $('#Did').text();
-                var kl = $('#Dsc').text();
+                /*var k = $('#Did').text();
+                var kl = $('#Dsc').text();*/
                 var newdate = dateindex;
                 var i;
                 for (i = 0; i < kl.length; i++) {
@@ -273,20 +270,32 @@
                 });
                 $("#Dform").empty();
                 $('#Dform').append('<input type="hidden" name="DoctorId" value="' + k + '"/>' +
-                     '<input type="hidden" name="sid" value="' + kl + '"/>');
+                    '<input type="hidden" name="sid" value="' + kl + '"/>');
                 $('#next').append($(this).html());
                 $('#dform').show();
                 $('#drow').hide();
                 return false;
 
-            });
+           });
+        }
+        $(document).ready(function () {
+            setTimeout(function () {
+                $("#warningLabel").hide(1000).empty();
+            }, 5000);
+            
+
+
+            
+            
+
+            
             $('#back').on('click', function () {
                 $('#dform').hide();
                 $('#drow').show();
                 return false;
             });
 
-            $('.link').on('click', function () {
+            /*$('.link').on('click', function () {
                 var k = $('#Did').text();
                 var kl = $('#Dsc').text();
                 console.log(kl);
@@ -318,7 +327,7 @@
                     daysOfWeekDisabled: datelimit,
                     todayHighlight: true
                 });
-               // $("#add").val('');
+                // $("#add").val('');
                 $('#next').empty();
                 $("#Dform").empty();
                 $('#Dform').append('<input type="hidden" name="DoctorId" value="' + k + '"/>' +
@@ -329,7 +338,7 @@
                 $('#dform').show();
                 $('#drow').hide();
                 return false;
-            });
+            });*/
             $('#dform').hide();
 
             $('#docCategory').on('change', function () {
@@ -354,25 +363,25 @@
                                 $('#drow').append('<div class="col-md-3" style="margin-bottom: 36px;">' +
                                     '<div><img class="docimg" src="/'+value.Image+'"/>' +
                                     '</div><div style="visibility: hidden; height: 0;" id="Did">'+value.Id+'</div><div style="visibility: hidden; height: 0;" id="Dsc">'+value.Schedule+'</div>'+
-                    '<div class="doctext"><table><tr><th class="ft-sz">'+value.Name+'</th></tr>'+
-                            '<tr class="ft-ss">'+
-                                '<td>'+value.Designation+'</td>'+
-                            '</tr><tr><td>'+value.Degree+'</td></tr><tr>'+
-                                '<td>fees:'+ value.Fees +'</td></tr> </table></div>');
+                                    '<div class="doctext"><table><tr><th class="ft-sz">'+value.Name+'</th></tr>'+
+                                    '<tr class="ft-ss">'+
+                                    '<td>'+value.Designation+'</td>'+
+                                    '</tr><tr><td>'+value.Degree+'</td></tr><tr>'+
+                                    '<td>fees:'+ value.Fees +'</td></tr> </table></div>');
                             
                             
                             } 
                             else {
                                 $('#drow').append(
-                                '<div class="col-md-3" style="margin-bottom: 36px;">' +
-                                '<a class="link" href="">'+
-                                '<div><img class="docimg" src="/'+value.Image+'"/>' +
-                                '</div><div style="visibility: hidden; height: 0;" id="Did">'+value.Id+'</div><div style="visibility: hidden; height: 0;" id="Dsc">'+value.Schedule+'</div>'+
-                '<div class="doctext"><table><tr><th class="ft-sz">'+value.Name+'</th></tr>'+
-                        '<tr class="ft-ss">'+
-                            '<td>'+value.Designation+'</td>'+
-                        '</tr><tr><td>'+value.Degree+'</td></tr><tr>'+
-                            '<td>fees: '+value.Fees+' </td></tr> </table></div>');
+                                    '<div class="col-md-3" style="margin-bottom: 36px;">' +
+                                    '<a class="link" href="">'+
+                                    '<div><img class="docimg" src="/'+value.Image+'"/>' +
+                                    '</div><div style="visibility: hidden; height: 0;" id="Did">'+value.Id+'</div><div style="visibility: hidden; height: 0;" id="Dsc">'+value.Schedule+'</div>'+
+                                    '<div class="doctext"><table><tr><th class="ft-sz">'+value.Name+'</th></tr>'+
+                                    '<tr class="ft-ss">'+
+                                    '<td>'+value.Designation+'</td>'+
+                                    '</tr><tr><td>'+value.Degree+'</td></tr><tr>'+
+                                    '<td>fees: '+value.Fees+' </td></tr> </table></div>');
                             
                             
                             }

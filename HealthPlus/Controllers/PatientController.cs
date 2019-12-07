@@ -15,9 +15,22 @@ namespace HealthPlus.Controllers
         BaseController baseControl = new BaseController();
         public PatientController()
         {
+            
+
             if (System.Web.HttpContext.Current.Session["PatientId"] == null)
             {
                 RedirectToAction("Login", "Authentication");
+            }
+            else
+            {
+                int iid = (int)System.Web.HttpContext.Current.Session["PatientId"];
+
+                using (var ctx = new HospitalContext())
+                {
+                    int not = ctx.Appointment.Where(c => c.PatientId == iid && c.IsSeen == 2).Select(c => c.Id).ToList().Count;
+
+                    System.Web.HttpContext.Current.Session["PatientNotify"] = not;
+                }
             }
         }
         //
@@ -29,6 +42,7 @@ namespace HealthPlus.Controllers
             appointment.Approval = 0;
             appointment.SerialNo = 0;
             appointment.Note = baseControl.Encrypt(appointment.Note);
+            appointment.IsSeen = 0;
             // appointment.Date= appointment.Date.ToString("dd/MM/yyyy");
             using (var ctx = new HospitalContext())
             {
@@ -49,9 +63,21 @@ namespace HealthPlus.Controllers
             Patient p = new Patient();
             using (var ctx = new HospitalContext())
             {
+               
+                 List <Appointment> lap= (from a in ctx.Appointment 
+                                         where a.PatientId == pid && a.IsSeen == 2 
+                                              select a).ToList();
+                foreach (Appointment q in lap)
+                {
+                    q.IsSeen = 1;
+                }
+                ctx.SaveChanges();
+                
+                Session["PatientNotify"] = 0;
+
                 var data = (from a in ctx.Appointment
                             join d in ctx.Doctor on a.DoctorId equals d.Id
-                            where a.DoctorId == d.Id && a.PatientId==pid
+                            where a.PatientId==pid
                             select new
                             {
                                 aDate = a.Date,
@@ -107,6 +133,33 @@ namespace HealthPlus.Controllers
                 return RedirectToAction("Profile", "Patient", new { message = "Update Failed" });
 
             }
+        }
+
+        public JsonResult HoverResult()
+        {
+            int pid = (int) Session["PatientId"];
+            List<PatientAppointmentView> patient=new List<PatientAppointmentView>();
+            using (var ctx = new HospitalContext())
+            {
+                var k = from a in ctx.Appointment
+                    join d in ctx.Doctor on a.DoctorId equals d.Id
+                    where a.PatientId == pid && a.IsSeen == 2
+                    select new
+                    {
+                        DName = d.Name,
+                        Appr = a.Approval,
+                        
+                    };
+                foreach (var d in k)
+                {
+                    PatientAppointmentView pp=new PatientAppointmentView();
+                    pp.Name = baseControl.Decrypt(d.DName);
+                    pp.Approval = d.Appr;
+                    patient.Add(pp);
+                }
+            }
+            return Json(patient);
+
         }
        
 	}

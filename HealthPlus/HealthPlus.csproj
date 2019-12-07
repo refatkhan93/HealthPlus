@@ -726,6 +726,7 @@
     <Content Include="Views\Receptionist\AppointmentSchedule.cshtml" />
     <Content Include="Views\Receptionist\Report.cshtml" />
     <Content Include="Views\Receptionist\ReceptionistProfile.cshtml" />
+    <Content Include="Views\Receptionist\MakeBill.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

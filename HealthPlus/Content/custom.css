@@ -1,5 +1,12 @@
 ﻿body {
 }
+.notif {
+    color: white;
+    border: 1px solid red;
+    background-color: red;
+    border-radius: 14px;
+    padding: 5px;
+}
 .x-box-2 {
     margin: 25px 100px 100px 100px;
     padding: 33px;

@@ -15,8 +15,24 @@ namespace HealthPlus.Controllers
 {
     public class PrimaryController : Controller
     {
-        //
-        // GET: /Primary/
+
+        public PrimaryController()
+        {
+            
+
+            if (System.Web.HttpContext.Current.Session["PatientId"] != null)
+            {
+                int iid = (int)System.Web.HttpContext.Current.Session["PatientId"];
+
+                using (var ctx = new HospitalContext())
+                {
+                    int not = ctx.Appointment.Where(c => c.PatientId == iid && c.IsSeen == 2).Select(c => c.Id).ToList().Count;
+
+                    System.Web.HttpContext.Current.Session["PatientNotify"] = not;
+                }
+            }
+        }
+
         BaseController baseController=new BaseController();
         public ActionResult Index()
         {

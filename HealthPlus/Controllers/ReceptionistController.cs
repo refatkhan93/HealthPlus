@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
@@ -127,6 +128,7 @@ namespace HealthPlus.Controllers
                 }
                 Appointment a = ctx.Appointment.Single(c => c.Id == id);
                 a.Approval = value;
+                a.IsSeen = 2;
                 a.SerialNo = serial;
                 ctx.SaveChanges();
             }
@@ -235,7 +237,7 @@ namespace HealthPlus.Controllers
             SqlConnection connection = new SqlConnection(ctx.Database.Connection.ConnectionString);
             string query1 = "SELECT DAY(Date) as day,Count(Approval) as Ct "+
                             "FROM AGraph as a "+
-                            "WHERE a.Date>='"+start+"' AND a.Date<='"+end+"' AND a.Approval=1 "+
+                            "WHERE a.Date>='"+start+"' AND a.Date<='"+end+"' AND a.Approval=1 OR a.Approval=3 "+
                             "GROUP BY Date";
             string query2 = "SELECT DAY(Date) as day,Count(Approval) as Ct " +
                             "FROM AGraph as a " +
@@ -250,7 +252,7 @@ namespace HealthPlus.Controllers
             {
                 int k = Convert.ToInt32(reader["day"].ToString());
                 
-                ap[k]=Convert.ToInt32(reader["Ct"].ToString());
+                ap[k-1]=Convert.ToInt32(reader["Ct"].ToString());
             }
             
             reader.Close();
@@ -260,7 +262,7 @@ namespace HealthPlus.Controllers
             {
                 int k = Convert.ToInt32(reader2["day"].ToString());
 
-                rj[k] = Convert.ToInt32(reader2["Ct"].ToString());
+                rj[k-1] = Convert.ToInt32(reader2["Ct"].ToString());
             }
             reader2.Close();
             int i;
@@ -276,6 +278,80 @@ namespace HealthPlus.Controllers
             Reject = Reject + rj[i]+"]";
             connection.Close();
             return Json(new { App = ap, Rej =rj });
+        }
+
+        public ActionResult MakeBill()
+        {
+            ViewBag.MakeBill = "active";
+            List<Doctor> doc=new List<Doctor>();
+            using (var ctx = new HospitalContext())
+            {
+                var dd = ctx.Doctor.ToList();
+                foreach (var dc in dd)
+                {
+                    Doctor d=new Doctor();
+                    d.Name = baseControl.Decrypt(dc.Name);
+                    d.Id = dc.Id;
+                    doc.Add(d);
+                }
+            }
+            ViewBag.Doctors = doc;
+            return View();
+        }
+
+        public JsonResult GetVisitedPatient(int id,int session)
+        {
+            string date = DateTime.Now.ToString("MM/dd/yyyy");
+            List<Patient> patients=new List<Patient>();
+            using (var ctx = new HospitalContext())
+            {
+                var data = from ap in ctx.Appointment
+                           join p in ctx.Patient on ap.PatientId equals p.Id
+                          
+                           where ap.DoctorId == id && ap.Session == session && ap.Approval == 3 && ap.Date == date
+                           select new
+                           {
+                               pName = p.Name,
+                              pId=p.Id
+                           };
+                foreach (var k in data)
+                {
+                    Patient p = new Patient();
+                    p.Name = baseControl.Decrypt(k.pName);
+                    p.Id = k.pId;
+                    patients.Add(p);
+                }
+               /* 
+                ViewBag.Patient = data;*/
+            }
+            return Json(patients);
+        }
+
+        public JsonResult GetInfo(int docId,int session,int patId)
+        {
+            string date = DateTime.Now.ToString("MM/dd/yyyy");
+            Patient pt = new Patient();
+            Doctor dt = new Doctor();
+            int k;
+            using (var ctx = new HospitalContext())
+            {
+                var p = ctx.Patient.Find(patId);
+                var d = ctx.Doctor.Find(docId);
+                k =
+                    ctx.Appointment.Where(
+                        c =>
+                            c.DoctorId == docId && c.PatientId == patId && c.Approval == 3 && c.Date == date &&
+                            c.Session == session).Select(c => c.Id).FirstOrDefault();
+
+                
+                pt.Name = baseControl.Decrypt(p.Name);
+                pt.Address = baseControl.Decrypt(p.Address);
+                pt.Age = p.Age;
+                dt.Name = baseControl.Decrypt(d.Name);
+                dt.Fees = d.Fees;
+                dt.Email = baseControl.Decrypt(d.Email);
+            }
+            return Json(new {patient = pt, doctor = dt,card=k});
         }
         
 	}
